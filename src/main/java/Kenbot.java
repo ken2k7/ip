@@ -8,6 +8,15 @@ public class Kenbot {
                 + "\n"
                 + "                 Kenbot";
 
-        System.out.println(banner);
+
+      String line = "____________________________________________________________";
+
+      System.out.println(line);
+      System.out.println(banner);
+      System.out.println("Yo! I'm Kenbot");
+      System.out.println("How may I help you today?");
+      System.out.println(line);
+      System.out.println("Peace! See you soon!");
+      System.out.println(line);
     }
 }
