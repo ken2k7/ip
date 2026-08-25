@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Kenbot {
     static void main(String[] args) {
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         String banner = " _  __          _           _        \n"
                 + "| |/ /___ _ __ | |__   ___ | |_      \n"
@@ -43,7 +43,7 @@ public class Kenbot {
               break;
           } else if (words[0].equals("mark")) {
               int taskIndex = Integer.parseInt(words[1]) - 1;
-              tasks[taskIndex] = "[X]" + tasks[taskIndex].substring(3);
+              tasks[taskIndex].markAsDone();
 
               System.out.println(line);
               System.out.println("Nice! I've marked this task as done:");
@@ -51,7 +51,7 @@ public class Kenbot {
               System.out.println(line);
           } else if (words[0].equals("unmark")) {
               int taskIndex = Integer.parseInt(words[1]) - 1;
-              tasks[taskIndex] = "[ ]" + tasks[taskIndex].substring(3);
+              tasks[taskIndex].markAsNotDone();
 
               System.out.println(line);
               System.out.println("OK, I've marked this task as not done yet:");
@@ -59,7 +59,7 @@ public class Kenbot {
               System.out.println(line);
           } else {
               System.out.println(line);
-              tasks[taskCount] = "[ ] " + nxt;
+              tasks[taskCount] = new Task(nxt);
               taskCount += 1;
               System.out.println("Added: " + nxt);
               System.out.println(line);
