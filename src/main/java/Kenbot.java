@@ -1,5 +1,7 @@
+import java.util.Scanner;
+
 public class Kenbot {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         String banner = " _  __          _           _        \n"
                 + "| |/ /___ _ __ | |__   ___ | |_      \n"
                 + "| ' // _ \\ '_ \\| '_ \\ / _ \\| __|     \n"
@@ -8,15 +10,34 @@ public class Kenbot {
                 + "\n"
                 + "                 Kenbot";
 
+        String line = "____________________________________________________________";
 
-      String line = "____________________________________________________________";
 
       System.out.println(line);
       System.out.println(banner);
       System.out.println("Yo! I'm Kenbot");
       System.out.println("How may I help you today?");
-      System.out.println(line);
-      System.out.println("Peace! See you soon!");
-      System.out.println(line);
+      System.out.println(line + "\n");
+      Scanner scn = new Scanner(System.in);
+      echo(scn);
+      scn.close();
     }
+
+    public static void echo(Scanner scn) {
+        String line = "____________________________________________________________";
+        String inp = scn.nextLine();
+
+        if(inp.equals("bye")) {
+            System.out.println(line);
+            System.out.println("Peace! See you soon!");
+            System.out.println(line);
+            return;
+        } else {
+            System.out.println(line);
+            System.out.println(inp);
+            System.out.println(line + "\n");
+            echo(scn);
+        }
+    }
+
 }
