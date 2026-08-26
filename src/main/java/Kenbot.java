@@ -14,7 +14,6 @@ public class Kenbot {
 
         String line = "____________________________________________________________";
 
-
       System.out.println(line);
       System.out.println(banner);
 
@@ -57,6 +56,37 @@ public class Kenbot {
               System.out.println("OK, I've marked this task as not done yet:");
               System.out.println("  " + tasks[taskIndex]);
               System.out.println(line);
+          } else if (nxt.startsWith("todo ")) {
+              String description = nxt.substring("todo ".length()).trim();
+              if (description.isEmpty()) {
+                  printError(line, "Please provide a to-do description.");
+              } else {
+                  tasks[taskCount] = new Todo(description);
+                  taskCount += 1;
+                  printAddedTask(line, tasks[taskCount - 1], taskCount);
+              }
+          } else if (nxt.startsWith("deadline ")) {
+              String details = nxt.substring("deadline ".length()).trim();
+              String[] parts = details.split(" /by ", 2);
+              if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
+                  printError(line, "Use: deadline DESCRIPTION /by DATE_OR_TIME");
+              } else {
+                  tasks[taskCount] = new Deadline(parts[0].trim(), parts[1].trim());
+                  taskCount += 1;
+                  printAddedTask(line, tasks[taskCount - 1], taskCount);
+              }
+          } else if (nxt.startsWith("event ")) {
+              String details = nxt.substring("event ".length()).trim();
+              String[] fromParts = details.split(" /from ", 2);
+              String[] toParts = fromParts.length == 2 ? fromParts[1].split(" /to ", 2) : new String[0];
+              if (fromParts.length != 2 || toParts.length != 2
+                      || fromParts[0].isBlank() || toParts[0].isBlank() || toParts[1].isBlank()) {
+                  printError(line, "Use: event DESCRIPTION /from START /to END");
+              } else {
+                  tasks[taskCount] = new Event(fromParts[0].trim(), toParts[0].trim(), toParts[1].trim());
+                  taskCount += 1;
+                  printAddedTask(line, tasks[taskCount - 1], taskCount);
+              }
           } else {
               System.out.println(line);
               tasks[taskCount] = new Task(nxt);
@@ -70,5 +100,32 @@ public class Kenbot {
       scn.close();
 
       }
+
+    /**
+     * Prints the confirmation shown after a task is added.
+     *
+     * @param line the output separator
+     * @param task the newly created task
+     * @param taskCount the number of tasks currently stored
+     */
+    private static void printAddedTask(String line, Task task, int taskCount) {
+        System.out.println(line);
+        System.out.println("Got it. I've added this task:");
+        System.out.println("  " + task);
+        System.out.println("Now you have " + taskCount + " tasks in the list.");
+        System.out.println(line);
+    }
+
+    /**
+     * Prints a message for a command that does not have the required format.
+     *
+     * @param line the output separator
+     * @param message the explanation to display
+     */
+    private static void printError(String line, String message) {
+        System.out.println(line);
+        System.out.println(message);
+        System.out.println(line);
+    }
 
 }

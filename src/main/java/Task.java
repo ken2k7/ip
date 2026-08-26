@@ -1,5 +1,7 @@
 /**
  * Represents a task and whether it has been completed.
+ *
+ * <p>Specific kinds of tasks extend this class to add their own details.</p>
  */
 public class Task {
     private final String description;
@@ -13,6 +15,15 @@ public class Task {
     public Task(String description) {
         this.description = description;
         this.isDone = false;
+    }
+
+    /**
+     * Returns the description supplied when this task was created.
+     *
+     * @return the task description
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**
