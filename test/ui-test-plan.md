@@ -623,6 +623,283 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ```
 
+## TC20 - Delete a task from the middle of the list
+
+**Aim:** Check that `delete` removes the task the user named, and that the tasks
+after it are renumbered. Delete is the first command where the numbers shown by
+`list` change, so an off-by-one would show up here and nowhere else.
+
+**Input:**
+
+```text
+todo read book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+delete 2
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC21 - Delete the first task and check the numbering shifts
+
+**Aim:** Check the boundary at the start of the list. Removing task 1 should move
+every other task up by one position.
+
+**Input:**
+
+```text
+todo read book
+todo join sports club
+delete 1
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] join sports club
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] join sports club
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC22 - Delete the only task
+
+**Aim:** Check that emptying the list leaves it in a usable state, reported the
+same way as a list that was never filled.
+
+**Input:**
+
+```text
+todo read book
+delete 1
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [T][ ] read book
+Now you have 0 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+You have no tasks yet.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC23 - Reject delete with no task number
+
+**Aim:** Check that `delete` on its own is reported, that the message names the
+command the user typed, and that the list is unchanged.
+
+**Input:**
+
+```text
+todo read book
+delete
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Tell me which task to delete, like: delete 2
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC24 - Reject a delete number that is out of range
+
+**Aim:** Check that a number past the end of the list is reported in the same
+wording as `mark`, and that nothing is removed.
+
+**Input:**
+
+```text
+todo read book
+delete 99
+delete abc
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+There is no task 99. You have 1 task(s).
+____________________________________________________________
+____________________________________________________________
+'abc' is not a task number.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC25 - Reject delete when the list is empty
+
+**Aim:** Check that deleting before adding anything explains that the list is
+empty, rather than quoting a range that makes no sense.
+
+**Input:**
+
+```text
+delete 1
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+There is no task 1. Your list is empty.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC26 - Keep counting correctly across adds and deletes
+
+**Aim:** Interleave adding, deleting and marking to check that the task count
+follows the list rather than counting how many tasks were ever created, and that
+marking still reaches the right task after a removal.
+
+**Input:**
+
+```text
+todo read book
+todo join sports club
+delete 1
+todo borrow book
+mark 2
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] join sports club
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] borrow book
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [T][X] borrow book
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] join sports club
+2.[T][X] borrow book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
 ## Deliberately not treated as errors
 
 These were considered and left alone, so that a future reader does not add a

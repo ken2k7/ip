@@ -79,6 +79,8 @@ public class Kenbot {
             addTask(tasks, Deadline.of(argument));
         } else if (command.equals("event")) {
             addTask(tasks, Event.of(argument));
+        } else if (command.equals("delete")) {
+            deleteTask(tasks, argument);
         } else {
             throw new KenbotException("I don't know what that means.");
         }
@@ -94,6 +96,19 @@ public class Kenbot {
     private static void addTask(TaskList tasks, Task task) {
         tasks.add(task);
         printBlock("Got it. I've added this task:\n  " + task
+                + "\nNow you have " + tasks.size() + " tasks in the list.");
+    }
+
+    /**
+     * Removes a task and confirms it, along with the new size of the list.
+     *
+     * @param tasks the list to remove from
+     * @param argument the task number, as the user typed it
+     * @throws KenbotException if the number is missing, not a number, or out of range
+     */
+    private static void deleteTask(TaskList tasks, String argument) throws KenbotException {
+        Task removed = tasks.delete(argument);
+        printBlock("Noted. I've removed this task:\n  " + removed
                 + "\nNow you have " + tasks.size() + " tasks in the list.");
     }
 

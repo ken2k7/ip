@@ -4,8 +4,8 @@ import java.util.ArrayList;
  * Holds the user's tasks.
  *
  * <p>The list is private, so the only way to reach a task is through the
- * methods below. Both {@code mark} and {@code unmark} check the task number
- * before using it, which stops an invalid number from ever reaching the list.</p>
+ * methods below. Every one of them checks the task number before using it,
+ * which stops an invalid number from ever reaching the list.</p>
  */
 public class TaskList {
     private final ArrayList<Task> tasks = new ArrayList<>();
@@ -17,6 +17,20 @@ public class TaskList {
      */
     public void add(Task task) {
         tasks.add(task);
+    }
+
+    /**
+     * Removes a task from the list.
+     *
+     * <p>Tasks after the removed one move up, so the numbers shown by
+     * {@code describe} always run from 1 with no gaps.</p>
+     *
+     * @param argument the task number, as the user typed it
+     * @return the task that was removed, so the caller can display it
+     * @throws KenbotException if the number is missing, not a number, or out of range
+     */
+    public Task delete(String argument) throws KenbotException {
+        return tasks.remove(indexOf(argument, "delete"));
     }
 
     /**
@@ -36,7 +50,7 @@ public class TaskList {
      * @throws KenbotException if the number is missing, not a number, or out of range
      */
     public Task mark(String argument) throws KenbotException {
-        Task task = get(argument, "mark");
+        Task task = tasks.get(indexOf(argument, "mark"));
         task.markAsDone();
         return task;
     }
@@ -49,7 +63,7 @@ public class TaskList {
      * @throws KenbotException if the number is missing, not a number, or out of range
      */
     public Task unmark(String argument) throws KenbotException {
-        Task task = get(argument, "unmark");
+        Task task = tasks.get(indexOf(argument, "unmark"));
         task.markAsNotDone();
         return task;
     }
@@ -74,14 +88,20 @@ public class TaskList {
     }
 
     /**
-     * Finds the task the user asked for, or explains why it cannot be found.
+     * Works out which position in the list the user meant, or explains why the
+     * number cannot be used.
+     *
+     * <p>A position is returned rather than the task itself so that
+     * {@code delete} can remove by position. Removing by object would depend on
+     * how tasks compare to each other, which is not something this class
+     * should rely on.</p>
      *
      * @param argument the task number, as the user typed it
      * @param commandName the command being carried out, used in the message
-     * @return the task at the position the user gave
+     * @return the position in the list, counting from 0
      * @throws KenbotException if the number is missing, not a number, or out of range
      */
-    private Task get(String argument, String commandName) throws KenbotException {
+    private int indexOf(String argument, String commandName) throws KenbotException {
         if (argument.isBlank()) {
             throw new KenbotException("Tell me which task to " + commandName
                     + ", like: " + commandName + " 2");
@@ -105,6 +125,6 @@ public class TaskList {
             throw new KenbotException("There is no task " + number + ". You have "
                     + tasks.size() + " task(s).");
         }
-        return tasks.get(number - 1);
+        return number - 1;
     }
 }
