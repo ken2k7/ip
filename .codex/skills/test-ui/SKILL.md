@@ -34,8 +34,13 @@ Use Java 25. On macOS, switch with `sdk use java 25.0.3.fx-zulu` if `java
 From the repository root:
 
 ```bash
-python3 .claude/skills/test-ui/scripts/run_ui_tests.py
+python3 .codex/skills/test-ui/scripts/run_ui_tests.py
 ```
+
+This skill lives in `.codex/skills/test-ui/` and is symlinked into
+`.claude/skills/test-ui/`, so Claude Code and Codex run the same files.
+`.claude/skills/test-ui/scripts/run_ui_tests.py` resolves to the same script
+and works identically. Edit the files under `.codex/` only.
 
 Useful options:
 

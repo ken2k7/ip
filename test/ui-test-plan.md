@@ -8,7 +8,7 @@ against the expected output.
 Run the whole plan with:
 
 ```bash
-python3 .claude/skills/test-ui/scripts/run_ui_tests.py
+python3 .codex/skills/test-ui/scripts/run_ui_tests.py
 ```
 
 ## How this file is read

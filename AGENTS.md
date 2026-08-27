@@ -22,6 +22,33 @@ Unless the user says otherwise, assume that you are assisting a student working 
   * Make generated code as self-explanatory as possible, and include explanatory comments where they improve understanding.
   * When faced with a design choice, choose the simplest option that is sufficient for the requirements, while briefly explaining relevant more advanced alternatives.
 
+# Skills must work in both Claude Code and Codex
+
+This project is worked on with Claude Code today and may be worked on with
+Codex later, so the two must have identical functionality. Never add a skill
+that only one of them can run.
+
+Keep exactly one real copy of every skill, in `.codex/skills/<skill-name>/`,
+and make it visible to Claude Code with a relative symlink:
+
+```bash
+ln -s ../../.codex/skills/<skill-name> .claude/skills/<skill-name>
+```
+
+A symlink is used instead of a second copy so the two can never drift apart:
+there is one set of files, one place to edit, and one thing to review. Always
+edit the real files under `.codex/`; never edit through the `.claude/` path as
+if it were separate.
+
+When adding or changing a skill:
+
+* Put the skill's own files in `.codex/skills/<skill-name>/`.
+* Add the symlink under `.claude/skills/` and commit it, so a fresh clone gets
+  both. `.gitignore` already re-includes `.claude/skills/` for this reason.
+* Write any command in a skill or in this file using its `.codex/` path, so the
+  command works no matter which agent runs it.
+* Check that the skill actually runs from both paths before reporting it done.
+
 # Testing workflow after code changes
 
 Kenbot is a console program, so every change to its behavior must be checked
@@ -52,11 +79,11 @@ Say which of these applies rather than silently skipping the step.
 
 ## 2. Run the text-UI tests
 
-Invoke the `test-ui` skill. It is defined in `.claude/skills/test-ui/`, and any
-agent can run it directly from the repository root:
+Invoke the `test-ui` skill. It is available to both Claude Code and Codex, and
+any agent can also run it directly from the repository root:
 
 ```bash
-python3 .claude/skills/test-ui/scripts/run_ui_tests.py
+python3 .codex/skills/test-ui/scripts/run_ui_tests.py
 ```
 
 Use Java 25 (see "Java version" below). The runner compiles the sources itself,
