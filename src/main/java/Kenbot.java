@@ -52,6 +52,10 @@ public class Kenbot {
     /**
      * Carries out one command typed by the user.
      *
+     * <p>The switch below is an expression rather than a statement on purpose:
+     * an expression has to cover every {@link CommandType}, so the compiler
+     * reports any command added to that list but not handled here.</p>
+     *
      * @param input the whole line the user typed, already trimmed and not empty
      * @param tasks the list the command may read or change
      * @return true if the user asked to exit, false to carry on
@@ -59,57 +63,49 @@ public class Kenbot {
      */
     private static boolean handleCommand(String input, TaskList tasks) throws KenbotException {
         String[] parts = input.split("\\s+", 2);
-        String command = parts[0];
         String argument = parts.length > 1 ? parts[1] : "";
+        CommandType command = CommandType.from(parts[0]);
 
-        if (command.equals("bye")) {
-            printBlock("Peace! See you soon!");
-            return true;
-        } else if (command.equals("list")) {
-            printBlock(tasks.describe());
-        } else if (command.equals("mark")) {
-            Task marked = tasks.mark(argument);
-            printBlock("Nice! I've marked this task as done:\n  " + marked);
-        } else if (command.equals("unmark")) {
-            Task unmarked = tasks.unmark(argument);
-            printBlock("OK, I've marked this task as not done yet:\n  " + unmarked);
-        } else if (command.equals("todo")) {
-            addTask(tasks, Todo.of(argument));
-        } else if (command.equals("deadline")) {
-            addTask(tasks, Deadline.of(argument));
-        } else if (command.equals("event")) {
-            addTask(tasks, Event.of(argument));
-        } else if (command.equals("delete")) {
-            deleteTask(tasks, argument);
-        } else {
-            throw new KenbotException("I don't know what that means.");
-        }
-        return false;
+        String message = switch (command) {
+        case BYE -> "Peace! See you soon!";
+        case LIST -> tasks.describe();
+        case MARK -> "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
+        case UNMARK -> "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
+        case TODO -> addTask(tasks, Todo.of(argument));
+        case DEADLINE -> addTask(tasks, Deadline.of(argument));
+        case EVENT -> addTask(tasks, Event.of(argument));
+        case DELETE -> deleteTask(tasks, argument);
+        };
+
+        printBlock(message);
+        return command == CommandType.BYE;
     }
 
     /**
-     * Stores a new task and confirms it, along with the new size of the list.
+     * Stores a new task and describes what was added.
      *
      * @param tasks the list to add to
      * @param task the task that was just created
+     * @return the confirmation to show the user
      */
-    private static void addTask(TaskList tasks, Task task) {
+    private static String addTask(TaskList tasks, Task task) {
         tasks.add(task);
-        printBlock("Got it. I've added this task:\n  " + task
-                + "\nNow you have " + tasks.size() + " tasks in the list.");
+        return "Got it. I've added this task:\n  " + task
+                + "\nNow you have " + tasks.size() + " tasks in the list.";
     }
 
     /**
-     * Removes a task and confirms it, along with the new size of the list.
+     * Removes a task and describes what was removed.
      *
      * @param tasks the list to remove from
      * @param argument the task number, as the user typed it
+     * @return the confirmation to show the user
      * @throws KenbotException if the number is missing, not a number, or out of range
      */
-    private static void deleteTask(TaskList tasks, String argument) throws KenbotException {
+    private static String deleteTask(TaskList tasks, String argument) throws KenbotException {
         Task removed = tasks.delete(argument);
-        printBlock("Noted. I've removed this task:\n  " + removed
-                + "\nNow you have " + tasks.size() + " tasks in the list.");
+        return "Noted. I've removed this task:\n  " + removed
+                + "\nNow you have " + tasks.size() + " tasks in the list.";
     }
 
     /** Prints the banner and welcome message shown when the program starts. */
