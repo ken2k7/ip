@@ -17,9 +17,9 @@ python3 .codex/skills/test-ui/scripts/run_ui_tests.py
   case. The first word of the heading (for example `TC3`) is its identifier.
 * `**Aim:**` says what the test case is checking, so a reader knows why it
   exists.
-* `**Input:**` lists the lines typed into the console, one per line. Every test
-  case must end with `bye`, because that is the only command that ends the
-  program cleanly.
+* `**Input:**` lists the lines typed into the console, one per line. Most test
+  cases end with `bye`. A case may deliberately leave it out to check that the
+  program copes with the input running out.
 * `**Expected output:**` lists what the program should print *after* the
   greeting. The greeting is recorded once in the `Greeting` section below and
   is added automatically, so it does not have to be repeated.
@@ -250,20 +250,389 @@ bye
 
 ```text
 ____________________________________________________________
-Use: deadline DESCRIPTION /by DATE_OR_TIME
+A deadline needs a description and a /by part, like:
+  deadline return book /by Sunday
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
 ____________________________________________________________
 ```
 
-## Not yet covered
+## TC8 - Reject an event with no /to part
 
-These behaviours are deliberately absent from the plan because the program
-currently crashes instead of producing output that could be expected. Add a
-test case for each once the command loop handles the error:
+**Aim:** Check that an `event` missing one of its three parts is rejected with a
+usage message instead of creating a task.
 
-* `mark` with a missing, non-numeric, or out-of-range task number.
-* An unrecognised command, which is currently stored as a plain task rather
-  than reported as an error.
-* Reaching the end of the input without typing `bye`.
+**Input:**
+
+```text
+event project meeting /from Mon 2pm
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+An event needs a description, a /from and a /to, like:
+  event project meeting /from Mon 2pm /to 4pm
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC9 - Reject a to-do with no description
+
+**Aim:** Check that the command word on its own is rejected. This is the case
+that used to create a task named "todo", because the command was recognised only
+when followed by a space.
+
+**Input:**
+
+```text
+todo
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+A todo needs a description, like:
+  todo read book
+____________________________________________________________
+____________________________________________________________
+You have no tasks yet.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC10 - Reject an unrecognised command
+
+**Aim:** Check that an unknown command is reported, and that nothing is added to
+the list as a side effect.
+
+**Input:**
+
+```text
+blah
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+I don't know what that means.
+____________________________________________________________
+____________________________________________________________
+You have no tasks yet.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC11 - Show an empty list
+
+**Aim:** Check that `list` on an empty list says so, rather than printing a
+heading with nothing under it.
+
+**Input:**
+
+```text
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+You have no tasks yet.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC12 - Reject mark with no task number
+
+**Aim:** Check that `mark` on its own is reported instead of crashing, and that
+the list is unchanged afterwards.
+
+**Input:**
+
+```text
+todo read book
+mark
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Tell me which task to mark, like: mark 2
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC13 - Reject a task number that is not a number
+
+**Aim:** Check that text where a number is expected is reported instead of
+crashing.
+
+**Input:**
+
+```text
+todo read book
+mark abc
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+'abc' is not a task number.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC14 - Reject a task number that is too large
+
+**Aim:** Check that a number past the end of the list is reported instead of
+crashing, and that the task that does exist is left untouched.
+
+**Input:**
+
+```text
+todo read book
+mark 5
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+There is no task 5. You have 1 task(s).
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC15 - Reject task number zero
+
+**Aim:** Check the lower boundary. Task numbers shown to the user start at 1, so
+`mark 0` has no task to refer to.
+
+**Input:**
+
+```text
+todo read book
+mark 0
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+There is no task 0. You have 1 task(s).
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC16 - Reject mark when the list is empty
+
+**Aim:** Check that marking a task before adding any gives a message about the
+empty list, rather than one about a range.
+
+**Input:**
+
+```text
+mark 1
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+There is no task 1. Your list is empty.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC17 - Reject unmark with no task number
+
+**Aim:** Check that the message names the command the user actually typed, so
+`unmark` does not suggest typing `mark`.
+
+**Input:**
+
+```text
+todo read book
+unmark
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Tell me which task to unmark, like: unmark 2
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC18 - Keep working correctly after errors
+
+**Aim:** Interleave working and failing commands to check that a rejected
+command leaves the list exactly as it was, and that later commands still work.
+A test case that only feeds bad input would not notice an error handler that
+damages the list on its way out.
+
+**Input:**
+
+```text
+todo read book
+deadline return book /by Sunday
+mark 99
+list
+mark 2
+blah
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+There is no task 99. You have 2 task(s).
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Sunday)
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [D][X] return book (by: Sunday)
+____________________________________________________________
+____________________________________________________________
+I don't know what that means.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[D][X] return book (by: Sunday)
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC19 - Cope with the input running out
+
+**Aim:** Check that reaching the end of the input without typing `bye` ends the
+program quietly. This used to crash. There is deliberately no `bye` here.
+
+**Input:**
+
+```text
+todo read book
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+```
+
+## Deliberately not treated as errors
+
+These were considered and left alone, so that a future reader does not add a
+test case for behaviour that was chosen on purpose:
+
+* **Extra words after a command that takes none**, such as `list now`. The extra
+  words are ignored and the list is shown. Rejecting them would be stricter
+  without helping the user.
+* **Capitalisation**, such as `MARK 2` or `Todo read book`. Commands are
+  lower-case only, so these are reported as unknown commands.
+* **A blank line.** It is ignored and the program carries on waiting.
+* **Marking a task that is already done.** Harmless, so it is allowed rather
+  than reported.
