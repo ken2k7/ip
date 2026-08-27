@@ -22,6 +22,56 @@ Unless the user says otherwise, assume that you are assisting a student working 
   * Make generated code as self-explanatory as possible, and include explanatory comments where they improve understanding.
   * When faced with a design choice, choose the simplest option that is sufficient for the requirements, while briefly explaining relevant more advanced alternatives.
 
+# Testing workflow after code changes
+
+Kenbot is a console program, so every change to its behavior must be checked
+against the text-UI test plan before the change is reported as done. Follow
+these two steps after **each** code update to `src/main/java`, without waiting
+to be asked.
+
+## 1. Update the test plan if needed
+
+`test/ui-test-plan.md` is the single record of the text-UI test cases. Update it
+whenever a code change affects what the program prints or accepts:
+
+* **New or changed command** - add a test case, or update the affected one.
+* **Changed wording, spacing, or formatting of any output** - update the
+  expected output of every test case that shows it, and update the `Greeting`
+  section if the banner or welcome message changed.
+* **Newly handled error** - add a test case for it, and remove the matching
+  entry from the plan's "Not yet covered" section.
+
+Write the expected output from what the program *should* print. Never paste in
+what it currently prints to make a failing test pass: that turns a bug into a
+rule. If a test fails because the intended behavior genuinely changed, update
+the expected output and say so explicitly.
+
+No test plan update is needed for a change that cannot alter console output,
+such as a pure refactoring, a Javadoc-only edit, or a rename of a private field.
+Say which of these applies rather than silently skipping the step.
+
+## 2. Run the text-UI tests
+
+Invoke the `test-ui` skill. It is defined in `.claude/skills/test-ui/`, and any
+agent can run it directly from the repository root:
+
+```bash
+python3 .claude/skills/test-ui/scripts/run_ui_tests.py
+```
+
+Use Java 25 (see "Java version" below). The runner compiles the sources itself,
+so no separate build step is needed.
+
+Report the outcome honestly:
+
+* **All cases passed** - say so, and include the console session.
+* **A case failed** - the runner stops at the first failure and prints the
+  expected output, the actual output, and the difference. Show that report, fix
+  the cause in `src/main/java`, and run the plan again. Do not describe the
+  change as working until the full plan passes.
+* **Not run** - if the tests could not be run at all, say that plainly instead
+  of implying the change was verified.
+
 # iP grading criteria
 
 When helping with this individual project, keep the following grading requirements in mind. Mention relevant risks or improvements when reviewing code, planning work, or suggesting changes, but do not let this rubric override the user's explicit request.
