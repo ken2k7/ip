@@ -18,6 +18,10 @@ public class Parser {
      */
     public record ParsedCommand(CommandType command, String argument) { }
 
+    /** No instances: this class holds no state, so there is nothing to create. */
+    private Parser() {
+    }
+
     /**
      * Works out which command a line of input is asking for.
      *
@@ -40,9 +44,5 @@ public class Parser {
         String[] parts = input.split("\\s+", 2);
         String argument = parts.length > 1 ? parts[1] : "";
         return new ParsedCommand(CommandType.from(parts[0]), argument);
-    }
-
-    /** No instances: this class holds no state, so there is nothing to create. */
-    private Parser() {
     }
 }

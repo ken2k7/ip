@@ -96,6 +96,41 @@ public class Storage {
     }
 
     /**
+     * Writes every task to the save file, replacing whatever was there before.
+     *
+     * <p>The whole file is rewritten rather than added to, because a text file
+     * offers no way to change or remove a single line in the middle. Rewriting
+     * therefore covers adding, deleting, marking and unmarking with one
+     * method.</p>
+     *
+     * @param tasks the list to write
+     * @throws KenbotException if the file cannot be written
+     */
+    public void save(TaskList tasks) throws KenbotException {
+        List<String> lines = new ArrayList<>();
+        for (Task task : tasks.getTasks()) {
+            lines.add(task.toStorable());
+        }
+
+        try {
+            // The folder is made first, because writing fails if data/ is
+            // missing - which it will be the first time anyone runs Kenbot.
+            // createDirectories does nothing when the folder already exists, so
+            // it is safe to call on every save.
+            Files.createDirectories(file.getParent());
+
+            // Files.write creates the file if it is absent and empties it if it
+            // is present, which is exactly the overwrite that is wanted here.
+            Files.write(file, lines);
+        } catch (IOException e) {
+            // Java's file error becomes ours, so Kenbot still has only one kind
+            // of problem to catch and print.
+            throw new KenbotException("I couldn't save your tasks to "
+                    + file + ": " + e.getMessage());
+        }
+    }
+
+    /**
      * Turns one line of the save file back into a task.
      *
      * <p>This is the reverse of {@link Task#toStorable()}. The first field says
@@ -196,40 +231,5 @@ public class Storage {
             throw new KenbotException("empty field in: " + line);
         }
         return field;
-    }
-
-    /**
-     * Writes every task to the save file, replacing whatever was there before.
-     *
-     * <p>The whole file is rewritten rather than added to, because a text file
-     * offers no way to change or remove a single line in the middle. Rewriting
-     * therefore covers adding, deleting, marking and unmarking with one
-     * method.</p>
-     *
-     * @param tasks the list to write
-     * @throws KenbotException if the file cannot be written
-     */
-    public void save(TaskList tasks) throws KenbotException {
-        List<String> lines = new ArrayList<>();
-        for (Task task : tasks.getTasks()) {
-            lines.add(task.toStorable());
-        }
-
-        try {
-            // The folder is made first, because writing fails if data/ is
-            // missing - which it will be the first time anyone runs Kenbot.
-            // createDirectories does nothing when the folder already exists, so
-            // it is safe to call on every save.
-            Files.createDirectories(file.getParent());
-
-            // Files.write creates the file if it is absent and empties it if it
-            // is present, which is exactly the overwrite that is wanted here.
-            Files.write(file, lines);
-        } catch (IOException e) {
-            // Java's file error becomes ours, so Kenbot still has only one kind
-            // of problem to catch and print.
-            throw new KenbotException("I couldn't save your tasks to "
-                    + file + ": " + e.getMessage());
-        }
     }
 }
