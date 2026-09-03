@@ -34,6 +34,11 @@ public class Deadline extends Task {
         return new Deadline(parts[0].trim(), TaskDate.of(parts[1]));
     }
 
+    /**
+     * Returns this deadline as it should be shown on screen.
+     *
+     * @return {@code [D]} followed by the shared task text and the due date
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by + ")";

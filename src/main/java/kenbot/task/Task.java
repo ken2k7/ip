@@ -62,6 +62,11 @@ public class Task {
         return (isDone ? "1" : "0") + " | " + description;
     }
 
+    /**
+     * Returns this task as it should be shown on screen.
+     *
+     * @return the done marker in brackets, followed by the description
+     */
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;

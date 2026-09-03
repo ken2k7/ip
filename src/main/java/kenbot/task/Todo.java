@@ -29,6 +29,11 @@ public class Todo extends Task {
         return new Todo(argument.trim());
     }
 
+    /**
+     * Returns this to-do as it should be shown on screen.
+     *
+     * @return {@code [T]} followed by the shared task text
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();

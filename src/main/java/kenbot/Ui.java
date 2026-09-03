@@ -28,6 +28,10 @@ public class Ui {
 
     private final Scanner scanner = new Scanner(System.in);
 
+    /** Creates a user interface that reads from and writes to the console. */
+    public Ui() {
+    }
+
     /** Prints the banner and welcome message shown when the program starts. */
     public void showGreeting() {
         System.out.println(LINE);

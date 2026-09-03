@@ -43,6 +43,11 @@ public class Event extends Task {
                 TaskDate.of(toParts[1]));
     }
 
+    /**
+     * Returns this event as it should be shown on screen.
+     *
+     * @return {@code [E]} followed by the shared task text and both dates
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
