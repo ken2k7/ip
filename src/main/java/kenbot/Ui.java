@@ -1,3 +1,5 @@
+package kenbot;
+
 import java.util.Scanner;
 
 /**

@@ -1,3 +1,5 @@
+package kenbot;
+
 /**
  * Makes sense of what the user typed.
  *

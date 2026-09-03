@@ -225,7 +225,7 @@ def main() -> None:
                         help="Markdown file holding the test cases.")
     parser.add_argument("--src", default="src/main/java",
                         help="Folder containing the Java sources.")
-    parser.add_argument("--main-class", default="Kenbot",
+    parser.add_argument("--main-class", default="kenbot.Kenbot",
                         help="Class whose main method starts the program.")
     parser.add_argument("--case", action="append", default=None, metavar="ID",
                         help="Run only this test case; repeat to run several.")

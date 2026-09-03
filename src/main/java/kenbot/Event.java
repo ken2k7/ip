@@ -1,3 +1,5 @@
+package kenbot;
+
 /** Represents a task that takes place between a start and end time. */
 public class Event extends Task {
     private final TaskDate from;
