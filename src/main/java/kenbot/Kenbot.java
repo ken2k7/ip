@@ -59,7 +59,12 @@ public class Kenbot {
         ui.close();
     }
 
-    static void main(String[] args) {
+    /**
+     * Starts Kenbot with the usual save file.
+     *
+     * @param args command line arguments, which are not used
+     */
+    public static void main(String[] args) {
         new Kenbot("data/Kenbot.txt").run();
     }
 
