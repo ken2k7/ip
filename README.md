@@ -1,25 +1,68 @@
-# Kenbot project template
+# Kenbot
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Kenbot is a console chatbot that keeps track of your tasks. It remembers them
+between runs by saving them to a text file, so you can close it and pick up
+where you left off.
 
-## Setting up in Intellij
+It handles three kinds of task — plain to-dos, deadlines with a due date, and
+events that run between two dates — and it can mark them done, delete them, and
+list them back to you.
 
-Prerequisites: JDK 25, update Intellij to the most recent version.
+```
+ _  __          _           _
+| |/ /___ _ __ | |__   ___ | |_
+| ' // _ \ '_ \| '_ \ / _ \| __|
+| . \  __/ | | | |_) | (_) | |_
+|_|\_\___|_| |_|_.__/ \___/ \__|
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Kenbot.java` file, right-click it, and choose `Run Kenbot.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+                 Kenbot
+```
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+## Running it
+
+Prerequisites: **JDK 25**. The Gradle wrapper is included, so Gradle itself does
+not need to be installed.
+
+Start the app:
+
+```
+./gradlew run
+```
+
+Run the tests:
+
+```
+./gradlew test
+```
+
+Build a standalone JAR, which lands in `build/libs/kenbot.jar`:
+
+```
+./gradlew shadowJar
+```
+
+That JAR carries everything it needs, so it runs on its own from any folder:
+
+```
+java -jar kenbot.jar
+```
+
+Kenbot keeps its tasks in `data/Kenbot.txt`, created next to wherever you start
+it from. There is no need to make the folder yourself.
+
+## Setting up in IntelliJ
+
+1. Open IntelliJ (if you are not on the welcome screen, click `File` >
+   `Close Project` first).
+2. Click `Open`, select the project directory, and click `OK`. Accept the
+   defaults for any further prompts.
+3. Configure the project to use **JDK 25** (not another version), as explained
+   [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk). In the same
+   dialog, set **Project language level** to `SDK default`.
+4. Locate `src/main/java/kenbot/Kenbot.java`, right-click it, and choose
+   `Run Kenbot.main()`. If the editor is showing compile errors, try restarting
+   the IDE first. A correct setup prints the banner shown above.
+
+**Warning:** keep `src/main/java` as the source root for Java files. Do not
+rename those folders or move Java files outside that path, since it is where
+Gradle and other tools expect to find them.
