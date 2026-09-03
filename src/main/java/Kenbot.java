@@ -1,40 +1,27 @@
-import java.util.Scanner;
-
 /**
  * Runs the Kenbot task-tracking chatbot.
  *
- * <p>Commands are read from the console one line at a time until the user types
- * {@code bye} or the input runs out. Anything Kenbot cannot use is reported as a
- * {@link KenbotException} and printed in a single place, so one bad command does
+ * <p>Commands are read one line at a time until the user types {@code bye} or
+ * the input runs out. Anything Kenbot cannot use is reported as a
+ * {@link KenbotException} and shown in a single place, so one bad command does
  * not stop the program.</p>
  */
 public class Kenbot {
 
-    /** Separator printed above and below every block of output. */
-    private static final String LINE =
-            "____________________________________________________________";
-
-    /** ASCII art shown once when the program starts. */
-    private static final String BANNER = " _  __          _           _        \n"
-            + "| |/ /___ _ __ | |__   ___ | |_      \n"
-            + "| ' // _ \\ '_ \\| '_ \\ / _ \\| __|     \n"
-            + "| . \\  __/ | | | |_) | (_) | |_      \n"
-            + "|_|\\_\\___|_| |_|_.__/ \\___/ \\__|     \n"
-            + "\n"
-            + "                 Kenbot";
+    /** Deals with everything the user sees and types. */
+    private static final Ui ui = new Ui();
 
     static void main(String[] args) {
         Storage storage = new Storage();
-        Scanner scanner = new Scanner(System.in);
 
-        printGreeting();
+        ui.showGreeting();
 
         TaskList tasks = loadTasks(storage);
 
-        // hasNextLine() is checked first so running out of input ends the loop
-        // quietly instead of throwing.
-        while (scanner.hasNextLine()) {
-            String input = scanner.nextLine().trim();
+        // hasNextCommand() is checked first so running out of input ends the
+        // loop quietly instead of throwing.
+        while (ui.hasNextCommand()) {
+            String input = ui.readCommand();
             if (input.isEmpty()) {
                 continue;
             }
@@ -43,12 +30,12 @@ public class Kenbot {
                     break;
                 }
             } catch (KenbotException e) {
-                // Every error message in the program is printed here.
-                printBlock(e.getMessage());
+                // Every error message in the program is shown here.
+                ui.showError(e.getMessage());
             }
         }
 
-        scanner.close();
+        ui.close();
     }
 
     /**
@@ -64,12 +51,12 @@ public class Kenbot {
         try {
             Storage.LoadResult result = storage.load();
             if (result.skippedLines() > 0) {
-                printBlock("I couldn't understand " + result.skippedLines()
+                ui.show("I couldn't understand " + result.skippedLines()
                         + " line(s) in your save file, so I've left them out.");
             }
             return new TaskList(result.tasks());
         } catch (KenbotException e) {
-            printBlock(e.getMessage());
+            ui.showError(e.getMessage());
             return new TaskList();
         }
     }
@@ -77,9 +64,11 @@ public class Kenbot {
     /**
      * Carries out one command typed by the user.
      *
-     * <p>The switch below is an expression rather than a statement on purpose:
-     * an expression has to cover every {@link CommandType}, so the compiler
-     * reports any command added to that list but not handled here.</p>
+     * <p>Working out what was asked for is left to {@link Parser}; this method
+     * only decides what to do about it. The switch below is an expression
+     * rather than a statement on purpose: an expression has to cover every
+     * {@link CommandType}, so the compiler reports any command added to that
+     * list but not handled here.</p>
      *
      * @param input the whole line the user typed, already trimmed and not empty
      * @param tasks the list the command may read or change
@@ -109,7 +98,7 @@ public class Kenbot {
         // list: rewriting a file this small costs nothing, and it leaves no way
         // for a change to go unsaved.
         storage.save(tasks);
-        printBlock(message);
+        ui.show(message);
         return command == CommandType.BYE;
     }
 
@@ -138,25 +127,5 @@ public class Kenbot {
         Task removed = tasks.delete(argument);
         return "Noted. I've removed this task:\n  " + removed
                 + "\nNow you have " + tasks.size() + " tasks in the list.";
-    }
-
-    /** Prints the banner and welcome message shown when the program starts. */
-    private static void printGreeting() {
-        System.out.println(LINE);
-        System.out.println(BANNER);
-        System.out.println("Yo! I'm Kenbot");
-        System.out.println("How may I help you today?");
-        System.out.println(LINE + "\n");
-    }
-
-    /**
-     * Prints one block of output, wrapped in separator lines.
-     *
-     * @param body the text to show, which may span several lines
-     */
-    private static void printBlock(String body) {
-        System.out.println(LINE);
-        System.out.println(body);
-        System.out.println(LINE);
     }
 }
