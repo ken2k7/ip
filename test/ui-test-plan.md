@@ -905,6 +905,35 @@ Peace! See you soon!
 ____________________________________________________________
 ```
 
+## TC27 - Reject a task containing the save-file separator
+
+**Aim:** Kenbot separates fields in its save file with `|`, so a description
+containing that character could not be read back correctly. Check that such a
+task is refused when it is typed, rather than being accepted and then coming
+back incomplete after a restart.
+
+**Input:**
+
+```text
+todo read | book
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Sorry, a task can't contain the '|' character - I use it to separate fields in my save file.
+____________________________________________________________
+____________________________________________________________
+You have no tasks yet.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
 ## Not yet covered
 
 Behaviour that this plan cannot check, or does not check yet:
@@ -913,8 +942,11 @@ Behaviour that this plan cannot check, or does not check yet:
   running the program twice in the same folder and reading `data/Kenbot.txt`
   between the runs. A test case here is a single run of the program, and
   persistence is about what a *second* run sees, so this plan cannot cover it.
-* **A corrupted save file.** A line with the wrong number of fields is not
-  handled yet.
+* **A corrupted save file.** Lines that cannot be understood are now skipped
+  individually, the rest of the file is still loaded, and the count is
+  reported. This cannot be tested here, because a test case starts from an
+  empty folder and so has no save file to corrupt; it is checked by hand
+  instead, by writing a broken file and running the program.
 
 Loading is otherwise in place: a run that finds no save file starts with an
 empty list, which is what every test case in this plan relies on.

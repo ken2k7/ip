@@ -62,7 +62,12 @@ public class Kenbot {
      */
     private static TaskList loadTasks(Storage storage) {
         try {
-            return new TaskList(storage.load());
+            Storage.LoadResult result = storage.load();
+            if (result.skippedLines() > 0) {
+                printBlock("I couldn't understand " + result.skippedLines()
+                        + " line(s) in your save file, so I've left them out.");
+            }
+            return new TaskList(result.tasks());
         } catch (KenbotException e) {
             printBlock(e.getMessage());
             return new TaskList();
@@ -85,6 +90,14 @@ public class Kenbot {
      */
     private static boolean handleCommand(String input, TaskList tasks, Storage storage)
             throws KenbotException {
+        // Rejected here rather than when saving: once a description holding a
+        // bar reaches the file, its line can no longer be split back into the
+        // right fields, and the task would silently come back incomplete.
+        if (input.contains("|")) {
+            throw new KenbotException("Sorry, a task can't contain the '|' character"
+                    + " - I use it to separate fields in my save file.");
+        }
+
         String[] parts = input.split("\\s+", 2);
         String argument = parts.length > 1 ? parts[1] : "";
         CommandType command = CommandType.from(parts[0]);
