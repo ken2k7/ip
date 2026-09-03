@@ -6,6 +6,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import kenbot.task.Deadline;
+import kenbot.task.Event;
+import kenbot.task.Task;
+import kenbot.task.TaskDate;
+import kenbot.task.Todo;
+
 /**
  * Keeps the task list on the hard disk.
  *

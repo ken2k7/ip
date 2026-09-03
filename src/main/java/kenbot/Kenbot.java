@@ -1,5 +1,10 @@
 package kenbot;
 
+import kenbot.task.Deadline;
+import kenbot.task.Event;
+import kenbot.task.Task;
+import kenbot.task.Todo;
+
 /**
  * Runs the Kenbot task-tracking chatbot.
  *

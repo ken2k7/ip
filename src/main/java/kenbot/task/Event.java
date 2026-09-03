@@ -1,4 +1,6 @@
-package kenbot;
+package kenbot.task;
+
+import kenbot.KenbotException;
 
 /** Represents a task that takes place between a start and end time. */
 public class Event extends Task {

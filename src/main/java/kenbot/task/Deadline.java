@@ -1,4 +1,6 @@
-package kenbot;
+package kenbot.task;
+
+import kenbot.KenbotException;
 
 /** Represents a task that must be completed by a specified time. */
 public class Deadline extends Task {

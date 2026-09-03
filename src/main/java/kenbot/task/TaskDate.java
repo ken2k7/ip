@@ -1,8 +1,10 @@
-package kenbot;
+package kenbot.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import kenbot.KenbotException;
 
 /**
  * A point in time attached to a task: a real date, and optionally some text
