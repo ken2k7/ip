@@ -3,6 +3,8 @@ package kenbot;
 import java.util.ArrayList;
 import java.util.List;
 
+import kenbot.task.Task;
+
 /**
  * Holds the user's tasks.
  *
