@@ -113,6 +113,7 @@ public class Kenbot {
         case DEADLINE -> addTask(Deadline.of(argument));
         case EVENT -> addTask(Event.of(argument));
         case DELETE -> deleteTask(argument);
+        case FIND -> tasks.find(argument);
         };
 
         // Saved after every command rather than only the ones that change the

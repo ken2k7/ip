@@ -10,7 +10,7 @@ package kenbot;
  * failing quietly when a user tries the new command.</p>
  */
 public enum CommandType {
-    BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE;
+    BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, FIND;
 
     /**
      * Works out which command the user typed.

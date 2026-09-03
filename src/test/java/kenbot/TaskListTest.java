@@ -90,6 +90,34 @@ public class TaskListTest {
         assertThrows(KenbotException.class, () -> listOf("a").mark("0"));
     }
 
+    @Test
+    public void find_keywordInSomeDescriptions_listsOnlyThoseNumberedFromOne()
+            throws KenbotException {
+        TaskList tasks = listOf("read book", "join club", "return book");
+        assertEquals("Here are the matching tasks in your list:"
+                + "\n1.[T][ ] read book\n2.[T][ ] return book", tasks.find("book"));
+    }
+
+    @Test
+    public void find_differentCase_stillMatches() throws KenbotException {
+        assertTrue(listOf("join sports club").find("CLUB").contains("join sports club"));
+    }
+
+    @Test
+    public void find_partOfAWord_matches() throws KenbotException {
+        assertTrue(listOf("bookshop").find("book").contains("bookshop"));
+    }
+
+    @Test
+    public void find_nothingMatches_saysSoInsteadOfAnEmptyHeading() throws KenbotException {
+        assertEquals("No tasks match 'xyz'.", listOf("read book").find("xyz"));
+    }
+
+    @Test
+    public void find_noKeyword_throws() {
+        assertThrows(KenbotException.class, () -> listOf("read book").find("  "));
+    }
+
     /**
      * The list handed out for reading must not be a way to change the real one.
      */
