@@ -15,12 +15,25 @@ public class Storage {
     /**
      * Where the tasks are kept, relative to the folder Kenbot is run from.
      *
-     * <p>Built with {@link Path#of} rather than written as one string with
-     * slashes, so the separator is correct on every operating system. It is kept
-     * relative rather than absolute so the program still works on someone
-     * else's computer.</p>
+     * <p>Held as a {@link Path} rather than as plain text: {@code Path.of}
+     * accepts a forward slash on every operating system and keeps the parts
+     * using the local separator. The path stays relative rather than absolute
+     * so the program still works on someone else's computer.</p>
      */
-    private final Path file = Path.of("data", "Kenbot.txt");
+    private final Path file;
+
+    /**
+     * Creates storage backed by the given file.
+     *
+     * <p>The path is supplied rather than fixed here so that the caller decides
+     * where tasks live, which also lets a test point this at a file of its
+     * own.</p>
+     *
+     * @param filePath where to keep the tasks, relative to the working folder
+     */
+    public Storage(String filePath) {
+        this.file = Path.of(filePath);
+    }
 
     /**
      * What reading the save file produced: the tasks that could be understood,

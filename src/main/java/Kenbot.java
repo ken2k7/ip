@@ -1,6 +1,11 @@
 /**
  * Runs the Kenbot task-tracking chatbot.
  *
+ * <p>Kenbot owns the parts it needs and decides the order they work in:
+ * {@link Ui} reads input and prints output, {@link Parser} works out what was
+ * asked for, {@link TaskList} holds the tasks, and {@link Storage} keeps them
+ * on the hard disk.</p>
+ *
  * <p>Commands are read one line at a time until the user types {@code bye} or
  * the input runs out. Anything Kenbot cannot use is reported as a
  * {@link KenbotException} and shown in a single place, so one bad command does
@@ -8,15 +13,24 @@
  */
 public class Kenbot {
 
-    /** Deals with everything the user sees and types. */
-    private static final Ui ui = new Ui();
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
 
-    static void main(String[] args) {
-        Storage storage = new Storage();
+    /**
+     * Creates a chatbot that keeps its tasks in the given file.
+     *
+     * @param filePath where the tasks are saved, relative to the working folder
+     */
+    public Kenbot(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        tasks = loadTasks();
+    }
 
+    /** Greets the user, then carries out commands until there are no more. */
+    public void run() {
         ui.showGreeting();
-
-        TaskList tasks = loadTasks(storage);
 
         // hasNextCommand() is checked first so running out of input ends the
         // loop quietly instead of throwing.
@@ -26,7 +40,7 @@ public class Kenbot {
                 continue;
             }
             try {
-                if (handleCommand(input, tasks, storage)) {
+                if (handleCommand(input)) {
                     break;
                 }
             } catch (KenbotException e) {
@@ -38,16 +52,19 @@ public class Kenbot {
         ui.close();
     }
 
+    static void main(String[] args) {
+        new Kenbot("data/Kenbot.txt").run();
+    }
+
     /**
      * Reads any saved tasks from the hard disk, ready for the user to work with.
      *
      * <p>A list that cannot be read is reported and then ignored, so a problem
      * with the save file leaves Kenbot usable rather than stopping it.</p>
      *
-     * @param storage where saved tasks are kept
      * @return the saved tasks, or an empty list if there are none to load
      */
-    private static TaskList loadTasks(Storage storage) {
+    private TaskList loadTasks() {
         try {
             Storage.LoadResult result = storage.load();
             if (result.skippedLines() > 0) {
@@ -71,14 +88,11 @@ public class Kenbot {
      * list but not handled here.</p>
      *
      * @param input the whole line the user typed, already trimmed and not empty
-     * @param tasks the list the command may read or change
-     * @param storage where the list is written once the command has run
      * @return true if the user asked to exit, false to carry on
      * @throws KenbotException if the command is unknown, its details cannot be
      *         used, or the task list cannot be saved
      */
-    private static boolean handleCommand(String input, TaskList tasks, Storage storage)
-            throws KenbotException {
+    private boolean handleCommand(String input) throws KenbotException {
         Parser.ParsedCommand parsed = Parser.parse(input);
         CommandType command = parsed.command();
         String argument = parsed.argument();
@@ -88,10 +102,10 @@ public class Kenbot {
         case LIST -> tasks.describe();
         case MARK -> "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
         case UNMARK -> "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
-        case TODO -> addTask(tasks, Todo.of(argument));
-        case DEADLINE -> addTask(tasks, Deadline.of(argument));
-        case EVENT -> addTask(tasks, Event.of(argument));
-        case DELETE -> deleteTask(tasks, argument);
+        case TODO -> addTask(Todo.of(argument));
+        case DEADLINE -> addTask(Deadline.of(argument));
+        case EVENT -> addTask(Event.of(argument));
+        case DELETE -> deleteTask(argument);
         };
 
         // Saved after every command rather than only the ones that change the
@@ -105,11 +119,10 @@ public class Kenbot {
     /**
      * Stores a new task and describes what was added.
      *
-     * @param tasks the list to add to
      * @param task the task that was just created
      * @return the confirmation to show the user
      */
-    private static String addTask(TaskList tasks, Task task) {
+    private String addTask(Task task) {
         tasks.add(task);
         return "Got it. I've added this task:\n  " + task
                 + "\nNow you have " + tasks.size() + " tasks in the list.";
@@ -118,12 +131,11 @@ public class Kenbot {
     /**
      * Removes a task and describes what was removed.
      *
-     * @param tasks the list to remove from
      * @param argument the task number, as the user typed it
      * @return the confirmation to show the user
      * @throws KenbotException if the number is missing, not a number, or out of range
      */
-    private static String deleteTask(TaskList tasks, String argument) throws KenbotException {
+    private String deleteTask(String argument) throws KenbotException {
         Task removed = tasks.delete(argument);
         return "Noted. I've removed this task:\n  " + removed
                 + "\nNow you have " + tasks.size() + " tasks in the list.";
