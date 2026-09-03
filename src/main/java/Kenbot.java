@@ -24,10 +24,12 @@ public class Kenbot {
             + "                 Kenbot";
 
     static void main(String[] args) {
-        TaskList tasks = new TaskList();
+        Storage storage = new Storage();
         Scanner scanner = new Scanner(System.in);
 
         printGreeting();
+
+        TaskList tasks = loadTasks(storage);
 
         // hasNextLine() is checked first so running out of input ends the loop
         // quietly instead of throwing.
@@ -37,7 +39,7 @@ public class Kenbot {
                 continue;
             }
             try {
-                if (handleCommand(input, tasks)) {
+                if (handleCommand(input, tasks, storage)) {
                     break;
                 }
             } catch (KenbotException e) {
@@ -50,6 +52,29 @@ public class Kenbot {
     }
 
     /**
+     * Reads any saved tasks from the hard disk, ready for the user to work with.
+     *
+     * <p>A list that cannot be read is reported and then ignored, so a problem
+     * with the save file leaves Kenbot usable rather than stopping it.</p>
+     *
+     * @param storage where saved tasks are kept
+     * @return the saved tasks, or an empty list if there are none to load
+     */
+    private static TaskList loadTasks(Storage storage) {
+        try {
+            Storage.LoadResult result = storage.load();
+            if (result.skippedLines() > 0) {
+                printBlock("I couldn't understand " + result.skippedLines()
+                        + " line(s) in your save file, so I've left them out.");
+            }
+            return new TaskList(result.tasks());
+        } catch (KenbotException e) {
+            printBlock(e.getMessage());
+            return new TaskList();
+        }
+    }
+
+    /**
      * Carries out one command typed by the user.
      *
      * <p>The switch below is an expression rather than a statement on purpose:
@@ -58,10 +83,21 @@ public class Kenbot {
      *
      * @param input the whole line the user typed, already trimmed and not empty
      * @param tasks the list the command may read or change
+     * @param storage where the list is written once the command has run
      * @return true if the user asked to exit, false to carry on
-     * @throws KenbotException if the command is unknown, or its details cannot be used
+     * @throws KenbotException if the command is unknown, its details cannot be
+     *         used, or the task list cannot be saved
      */
-    private static boolean handleCommand(String input, TaskList tasks) throws KenbotException {
+    private static boolean handleCommand(String input, TaskList tasks, Storage storage)
+            throws KenbotException {
+        // Rejected here rather than when saving: once a description holding a
+        // bar reaches the file, its line can no longer be split back into the
+        // right fields, and the task would silently come back incomplete.
+        if (input.contains("|")) {
+            throw new KenbotException("Sorry, a task can't contain the '|' character"
+                    + " - I use it to separate fields in my save file.");
+        }
+
         String[] parts = input.split("\\s+", 2);
         String argument = parts.length > 1 ? parts[1] : "";
         CommandType command = CommandType.from(parts[0]);
@@ -77,6 +113,10 @@ public class Kenbot {
         case DELETE -> deleteTask(tasks, argument);
         };
 
+        // Saved after every command rather than only the ones that change the
+        // list: rewriting a file this small costs nothing, and it leaves no way
+        // for a change to go unsaved.
+        storage.save(tasks);
         printBlock(message);
         return command == CommandType.BYE;
     }

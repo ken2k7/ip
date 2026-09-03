@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Holds the user's tasks.
@@ -9,6 +10,20 @@ import java.util.ArrayList;
  */
 public class TaskList {
     private final ArrayList<Task> tasks = new ArrayList<>();
+
+    /** Creates an empty task list. */
+    public TaskList() {
+    }
+
+    /**
+     * Creates a task list holding the given tasks, used when loading a saved
+     * list from the hard disk.
+     *
+     * @param initialTasks the tasks to start with, in the order they are stored
+     */
+    public TaskList(List<Task> initialTasks) {
+        tasks.addAll(initialTasks);
+    }
 
     /**
      * Adds a task to the end of the list.
@@ -40,6 +55,19 @@ public class TaskList {
      */
     public int size() {
         return tasks.size();
+    }
+
+    /**
+     * Returns the stored tasks for reading, without exposing the real list.
+     *
+     * <p>A copy is returned so a caller cannot add or remove tasks behind this
+     * class's back; every change still has to go through {@code add} or
+     * {@code delete}.</p>
+     *
+     * @return the tasks, in the order they are stored
+     */
+    public List<Task> getTasks() {
+        return List.copyOf(tasks);
     }
 
     /**

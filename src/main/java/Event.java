@@ -42,4 +42,17 @@ public class Event extends Task {
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
+
+    /**
+     * Returns this event as {@code E | done | description | from | to}.
+     *
+     * <p>The start and end are kept as two fields rather than one so that
+     * reading the line back does not have to guess where to split them.</p>
+     *
+     * @return the save-file line for this event
+     */
+    @Override
+    public String toStorable() {
+        return "E | " + super.toStorable() + " | " + from + " | " + to;
+    }
 }

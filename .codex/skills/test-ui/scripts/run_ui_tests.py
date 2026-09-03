@@ -142,12 +142,18 @@ def compile_sources(source_dir: Path, class_dir: Path) -> None:
 
 
 def run_case(class_dir: Path, main_class: str, stdin_text: str,
-             timeout: int) -> subprocess.CompletedProcess:
-    """Start the program, feed it `stdin_text`, and capture what it prints."""
+             timeout: int, work_dir: Path) -> subprocess.CompletedProcess:
+    """
+    Start the program, feed it `stdin_text`, and capture what it prints.
+
+    The program runs in `work_dir` so that any file it saves lands in a
+    throwaway folder, rather than in the repository's own data folder.
+    """
     return subprocess.run(
         ["java", "-cp", str(class_dir), main_class],
         input=stdin_text + "\n" if stdin_text else "\n",
         capture_output=True, text=True, timeout=timeout,
+        cwd=str(work_dir),
     )
 
 
@@ -246,14 +252,21 @@ def main() -> None:
     print(RULE + "\n")
 
     class_dir = Path(tempfile.mkdtemp(prefix="ui-test-classes-"))
+    sandbox = Path(tempfile.mkdtemp(prefix="ui-test-sandbox-"))
     try:
         compile_sources(Path(args.src), class_dir)
 
         for case in cases:
+            # Each case runs in an empty folder, so a file saved by one case can
+            # never be seen by the next, and the repository's own data folder is
+            # left untouched.
+            shutil.rmtree(sandbox, ignore_errors=True)
+            sandbox.mkdir(parents=True, exist_ok=True)
+
             stdin_text = case["input"]
             try:
                 result = run_case(class_dir, args.main_class, stdin_text,
-                                  args.timeout)
+                                  args.timeout, sandbox)
             except subprocess.TimeoutExpired:
                 print_transcript(case, stdin_text,
                                  subprocess.CompletedProcess([], 0, "", ""))
@@ -275,6 +288,7 @@ def main() -> None:
         print(RULE)
     finally:
         shutil.rmtree(class_dir, ignore_errors=True)
+        shutil.rmtree(sandbox, ignore_errors=True)
 
 
 def join_expected(greeting: str, case: dict) -> str:

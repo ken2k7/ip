@@ -34,4 +34,14 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by + ")";
     }
+
+    /**
+     * Returns this deadline as {@code D | done | description | by}.
+     *
+     * @return the save-file line for this deadline
+     */
+    @Override
+    public String toStorable() {
+        return "D | " + super.toStorable() + " | " + by;
+    }
 }
