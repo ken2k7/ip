@@ -5,6 +5,11 @@ Kenbot. Each test case starts a **fresh** run of the program, types the listed
 input lines into the console, and compares everything the program printed
 against the expected output.
 
+Each case also runs in its own **empty throwaway folder**. Kenbot saves its
+tasks to `data/Kenbot.txt` relative to the folder it is started from, so this
+keeps one case's saved file from being seen by the next one, and keeps the test
+runner from overwriting the real `data/Kenbot.txt` in this repository.
+
 Run the whole plan with:
 
 ```bash
@@ -899,6 +904,16 @@ ____________________________________________________________
 Peace! See you soon!
 ____________________________________________________________
 ```
+
+## Not yet covered
+
+Behaviour that this plan cannot check, or does not check yet:
+
+* **Tasks surviving a restart.** Saving is checked only by reading
+  `data/Kenbot.txt` by hand, because a test case is a single run of the program
+  and persistence is about what a *second* run sees.
+* **Loading from the save file.** Not implemented yet.
+* **A corrupted or missing save file.** Not implemented yet.
 
 ## Deliberately not treated as errors
 

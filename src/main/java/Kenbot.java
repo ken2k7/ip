@@ -25,6 +25,7 @@ public class Kenbot {
 
     static void main(String[] args) {
         TaskList tasks = new TaskList();
+        Storage storage = new Storage();
         Scanner scanner = new Scanner(System.in);
 
         printGreeting();
@@ -37,7 +38,7 @@ public class Kenbot {
                 continue;
             }
             try {
-                if (handleCommand(input, tasks)) {
+                if (handleCommand(input, tasks, storage)) {
                     break;
                 }
             } catch (KenbotException e) {
@@ -58,10 +59,13 @@ public class Kenbot {
      *
      * @param input the whole line the user typed, already trimmed and not empty
      * @param tasks the list the command may read or change
+     * @param storage where the list is written once the command has run
      * @return true if the user asked to exit, false to carry on
-     * @throws KenbotException if the command is unknown, or its details cannot be used
+     * @throws KenbotException if the command is unknown, its details cannot be
+     *         used, or the task list cannot be saved
      */
-    private static boolean handleCommand(String input, TaskList tasks) throws KenbotException {
+    private static boolean handleCommand(String input, TaskList tasks, Storage storage)
+            throws KenbotException {
         String[] parts = input.split("\\s+", 2);
         String argument = parts.length > 1 ? parts[1] : "";
         CommandType command = CommandType.from(parts[0]);
@@ -77,6 +81,10 @@ public class Kenbot {
         case DELETE -> deleteTask(tasks, argument);
         };
 
+        // Saved after every command rather than only the ones that change the
+        // list: rewriting a file this small costs nothing, and it leaves no way
+        // for a change to go unsaved.
+        storage.save(tasks);
         printBlock(message);
         return command == CommandType.BYE;
     }

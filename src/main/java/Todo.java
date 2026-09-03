@@ -29,4 +29,14 @@ public class Todo extends Task {
     public String toString() {
         return "[T]" + super.toString();
     }
+
+    /**
+     * Returns this to-do as {@code T | done | description}.
+     *
+     * @return the save-file line for this to-do
+     */
+    @Override
+    public String toStorable() {
+        return "T | " + super.toStorable();
+    }
 }

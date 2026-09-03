@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Holds the user's tasks.
@@ -40,6 +41,19 @@ public class TaskList {
      */
     public int size() {
         return tasks.size();
+    }
+
+    /**
+     * Returns the stored tasks for reading, without exposing the real list.
+     *
+     * <p>A copy is returned so a caller cannot add or remove tasks behind this
+     * class's back; every change still has to go through {@code add} or
+     * {@code delete}.</p>
+     *
+     * @return the tasks, in the order they are stored
+     */
+    public List<Task> getTasks() {
+        return List.copyOf(tasks);
     }
 
     /**

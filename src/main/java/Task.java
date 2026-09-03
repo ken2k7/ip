@@ -45,6 +45,21 @@ public class Task {
         isDone = false;
     }
 
+    /**
+     * Returns this task as one line of text for the save file.
+     *
+     * <p>Kept separate from {@link #toString()} on purpose: that method is for a
+     * person reading the console, while this one is for the program reading the
+     * file back later. It therefore uses plain fields separated by {@code |}
+     * instead of brackets and labels, and writes the done state as {@code 1} or
+     * {@code 0} rather than the {@code X} shown on screen.</p>
+     *
+     * @return the done flag and description, separated by {@code |}
+     */
+    public String toStorable() {
+        return (isDone ? "1" : "0") + " | " + description;
+    }
+
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;

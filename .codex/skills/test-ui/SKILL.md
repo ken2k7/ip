@@ -56,6 +56,11 @@ The runner compiles the sources into a temporary folder first, so it never
 leaves `.class` files in the repository. If compilation fails, it reports the
 compiler errors and runs no test case.
 
+Each test case is then run from its own empty throwaway folder. Kenbot saves its
+tasks to `data/Kenbot.txt` relative to the folder it is started from, so this
+stops one case from reading the file another case saved, and stops the runner
+from overwriting the real `data/Kenbot.txt` in the repository.
+
 ## What the runner reports
 
 For every test case it prints the console session: the lines typed in (each
