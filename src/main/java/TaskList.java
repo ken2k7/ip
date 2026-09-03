@@ -11,6 +11,20 @@ import java.util.List;
 public class TaskList {
     private final ArrayList<Task> tasks = new ArrayList<>();
 
+    /** Creates an empty task list. */
+    public TaskList() {
+    }
+
+    /**
+     * Creates a task list holding the given tasks, used when loading a saved
+     * list from the hard disk.
+     *
+     * @param initialTasks the tasks to start with, in the order they are stored
+     */
+    public TaskList(List<Task> initialTasks) {
+        tasks.addAll(initialTasks);
+    }
+
     /**
      * Adds a task to the end of the list.
      *

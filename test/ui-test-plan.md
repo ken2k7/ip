@@ -909,11 +909,15 @@ ____________________________________________________________
 
 Behaviour that this plan cannot check, or does not check yet:
 
-* **Tasks surviving a restart.** Saving is checked only by reading
-  `data/Kenbot.txt` by hand, because a test case is a single run of the program
-  and persistence is about what a *second* run sees.
-* **Loading from the save file.** Not implemented yet.
-* **A corrupted or missing save file.** Not implemented yet.
+* **Tasks surviving a restart.** Saving and loading are checked by hand, by
+  running the program twice in the same folder and reading `data/Kenbot.txt`
+  between the runs. A test case here is a single run of the program, and
+  persistence is about what a *second* run sees, so this plan cannot cover it.
+* **A corrupted save file.** A line with the wrong number of fields is not
+  handled yet.
+
+Loading is otherwise in place: a run that finds no save file starts with an
+empty list, which is what every test case in this plan relies on.
 
 ## Deliberately not treated as errors
 

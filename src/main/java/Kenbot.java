@@ -24,11 +24,12 @@ public class Kenbot {
             + "                 Kenbot";
 
     static void main(String[] args) {
-        TaskList tasks = new TaskList();
         Storage storage = new Storage();
         Scanner scanner = new Scanner(System.in);
 
         printGreeting();
+
+        TaskList tasks = loadTasks(storage);
 
         // hasNextLine() is checked first so running out of input ends the loop
         // quietly instead of throwing.
@@ -48,6 +49,24 @@ public class Kenbot {
         }
 
         scanner.close();
+    }
+
+    /**
+     * Reads any saved tasks from the hard disk, ready for the user to work with.
+     *
+     * <p>A list that cannot be read is reported and then ignored, so a problem
+     * with the save file leaves Kenbot usable rather than stopping it.</p>
+     *
+     * @param storage where saved tasks are kept
+     * @return the saved tasks, or an empty list if there are none to load
+     */
+    private static TaskList loadTasks(Storage storage) {
+        try {
+            return new TaskList(storage.load());
+        } catch (KenbotException e) {
+            printBlock(e.getMessage());
+            return new TaskList();
+        }
     }
 
     /**
