@@ -1,3 +1,5 @@
+package kenbot;
+
 /**
  * Signals a problem caused by something the user typed.
  *

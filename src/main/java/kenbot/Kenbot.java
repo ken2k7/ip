@@ -1,3 +1,5 @@
+package kenbot;
+
 /**
  * Runs the Kenbot task-tracking chatbot.
  *

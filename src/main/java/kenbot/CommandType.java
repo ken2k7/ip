@@ -1,3 +1,5 @@
+package kenbot;
+
 /**
  * The commands Kenbot understands.
  *
