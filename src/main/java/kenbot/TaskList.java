@@ -120,6 +120,39 @@ public class TaskList {
     }
 
     /**
+     * Returns the tasks whose description contains the given text.
+     *
+     * <p>Upper and lower case are ignored, and part of a word counts, so
+     * {@code find book} also finds "bookshop". Matches are numbered from 1
+     * rather than keeping their positions in the full list, so the numbers
+     * shown here are not the ones to use with {@code mark} or {@code delete}.</p>
+     *
+     * @param keyword the text to look for
+     * @return the matching tasks as numbered text, or a note that none matched
+     * @throws KenbotException if no keyword was given
+     */
+    public String find(String keyword) throws KenbotException {
+        if (keyword.isBlank()) {
+            throw new KenbotException("Tell me what to look for, like: find book");
+        }
+
+        String wanted = keyword.trim().toLowerCase();
+        StringBuilder text = new StringBuilder("Here are the matching tasks in your list:");
+        int found = 0;
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(wanted)) {
+                found++;
+                text.append("\n").append(found).append(".").append(task);
+            }
+        }
+
+        if (found == 0) {
+            return "No tasks match '" + keyword.trim() + "'.";
+        }
+        return text.toString();
+    }
+
+    /**
      * Works out which position in the list the user meant, or explains why the
      * number cannot be used.
      *

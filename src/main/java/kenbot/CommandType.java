@@ -32,7 +32,10 @@ public enum CommandType {
     EVENT,
 
     /** Removes one task from the list. */
-    DELETE;
+    DELETE,
+
+    /** Shows the tasks whose description contains a keyword. */
+    FIND;
 
     /**
      * Works out which command the user typed.

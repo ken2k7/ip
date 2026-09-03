@@ -962,6 +962,101 @@ Peace! See you soon!
 ____________________________________________________________
 ```
 
+## TC29 - Find tasks by a keyword in the description
+
+**Aim:** Check that `find` shows every task whose description contains the
+keyword, whatever its type, and numbers the matches from 1.
+
+**Input:**
+
+```text
+todo read book
+deadline return book /by 2019-06-06
+todo join sports club
+find book
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Jun 06 2019)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] join sports club
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Jun 06 2019)
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC30 - Find with a keyword nothing matches
+
+**Aim:** A search with no matches should say so plainly, rather than printing
+the "matching tasks" heading with nothing under it.
+
+**Input:**
+
+```text
+todo read book
+find xyz
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+No tasks match 'xyz'.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC31 - Reject find with no keyword
+
+**Aim:** `find` on its own has nothing to search for, so it should ask for a
+keyword and show the expected form.
+
+**Input:**
+
+```text
+find
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Tell me what to look for, like: find book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
 ## Not yet covered
 
 Behaviour that this plan cannot check, or does not check yet:
