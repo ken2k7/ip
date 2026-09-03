@@ -84,6 +84,11 @@ public class TaskDate {
         return time.isEmpty() ? date.toString() : date + " " + time;
     }
 
+    /**
+     * Returns this date as it should be shown on screen.
+     *
+     * @return the date as {@code MMM dd yyyy}, followed by the time if given
+     */
     @Override
     public String toString() {
         String shown = date.format(DISPLAY_FORMAT);

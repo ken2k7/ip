@@ -10,7 +10,29 @@ package kenbot;
  * failing quietly when a user tries the new command.</p>
  */
 public enum CommandType {
-    BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE;
+    /** Ends the program. */
+    BYE,
+
+    /** Shows every task, numbered. */
+    LIST,
+
+    /** Marks one task as done. */
+    MARK,
+
+    /** Marks one task as not done. */
+    UNMARK,
+
+    /** Adds a task with only a description. */
+    TODO,
+
+    /** Adds a task with a description and a due date. */
+    DEADLINE,
+
+    /** Adds a task with a description, a start and an end. */
+    EVENT,
+
+    /** Removes one task from the list. */
+    DELETE;
 
     /**
      * Works out which command the user typed.
