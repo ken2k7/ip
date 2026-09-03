@@ -1,16 +1,16 @@
 /** Represents a task that takes place between a start and end time. */
 public class Event extends Task {
-    private final String from;
-    private final String to;
+    private final TaskDate from;
+    private final TaskDate to;
 
     /**
      * Creates an event task.
      *
      * @param description the task description
-     * @param from the event start, kept as display text
-     * @param to the event end, kept as display text
+     * @param from when the event starts
+     * @param to when the event ends
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, TaskDate from, TaskDate to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -33,9 +33,10 @@ public class Event extends Task {
                 || fromParts[0].isBlank() || toParts[0].isBlank() || toParts[1].isBlank()) {
             throw new KenbotException(
                     "An event needs a description, a /from and a /to, like:\n"
-                    + "  event project meeting /from Mon 2pm /to 4pm");
+                    + "  event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600");
         }
-        return new Event(fromParts[0].trim(), toParts[0].trim(), toParts[1].trim());
+        return new Event(fromParts[0].trim(), TaskDate.of(toParts[0]),
+                TaskDate.of(toParts[1]));
     }
 
     @Override
@@ -53,6 +54,9 @@ public class Event extends Task {
      */
     @Override
     public String toStorable() {
-        return "E | " + super.toStorable() + " | " + from + " | " + to;
+        // toStorable() on each date rather than the dates themselves: a plain
+        // + would use toString(), whose display format cannot be read back in.
+        return "E | " + super.toStorable() + " | " + from.toStorable()
+                + " | " + to.toStorable();
     }
 }

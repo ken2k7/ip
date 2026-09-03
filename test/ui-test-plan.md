@@ -107,7 +107,7 @@ deadline is displayed after the description as `(by: ...)`.
 **Input:**
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 2019-06-06
 bye
 ```
 
@@ -116,7 +116,7 @@ bye
 ```text
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -132,7 +132,7 @@ that the start and end times are displayed in the right order.
 **Input:**
 
 ```text
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2019-08-06 1400 /to 2019-08-06 1600
 bye
 ```
 
@@ -141,7 +141,7 @@ bye
 ```text
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -159,8 +159,8 @@ order they were added.
 
 ```text
 todo read book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2019-06-06
+event project meeting /from 2019-08-06 1400 /to 2019-08-06 1600
 list
 bye
 ```
@@ -175,19 +175,19 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+2.[D][ ] return book (by: Jun 06 2019)
+3.[E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -256,7 +256,7 @@ bye
 ```text
 ____________________________________________________________
 A deadline needs a description and a /by part, like:
-  deadline return book /by Sunday
+  deadline return book /by 2019-10-15
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -271,7 +271,7 @@ usage message instead of creating a task.
 **Input:**
 
 ```text
-event project meeting /from Mon 2pm
+event project meeting /from 2019-08-06 1400
 bye
 ```
 
@@ -280,7 +280,7 @@ bye
 ```text
 ____________________________________________________________
 An event needs a description, a /from and a /to, like:
-  event project meeting /from Mon 2pm /to 4pm
+  event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -560,7 +560,7 @@ damages the list on its way out.
 
 ```text
 todo read book
-deadline return book /by Sunday
+deadline return book /by 2019-06-06
 mark 99
 list
 mark 2
@@ -579,7 +579,7 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -588,11 +588,11 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Jun 06 2019)
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-  [D][X] return book (by: Sunday)
+  [D][X] return book (by: Jun 06 2019)
 ____________________________________________________________
 ____________________________________________________________
 I don't know what that means.
@@ -600,7 +600,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][X] return book (by: Sunday)
+2.[D][X] return book (by: Jun 06 2019)
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -638,8 +638,8 @@ after it are renumbered. Delete is the first command where the numbers shown by
 
 ```text
 todo read book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2019-06-06
+event project meeting /from 2019-08-06 1400 /to 2019-08-06 1600
 delete 2
 list
 bye
@@ -655,23 +655,23 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+2.[E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -925,6 +925,34 @@ bye
 ```text
 ____________________________________________________________
 Sorry, a task can't contain the '|' character - I use it to separate fields in my save file.
+____________________________________________________________
+____________________________________________________________
+You have no tasks yet.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC28 - Reject a deadline whose date is not a real date
+
+**Aim:** Dates are now stored as real dates rather than as text, so anything
+that is not a date has to be refused when it is typed. Check that the refusal
+names the offending text, shows the accepted format, and does not create a task.
+
+**Input:**
+
+```text
+deadline return book /by Sunday
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+'Sunday' is not a date I understand. Write it as yyyy-mm-dd, like: 2019-10-15 1800
 ____________________________________________________________
 ____________________________________________________________
 You have no tasks yet.
