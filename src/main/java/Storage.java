@@ -110,13 +110,13 @@ public class Storage {
         case "D" -> {
             requireFieldCount(parts, 4, line);
             yield new Deadline(requireNotBlank(parts[2], line),
-                    requireNotBlank(parts[3], line));
+                    TaskDate.of(requireNotBlank(parts[3], line)));
         }
         case "E" -> {
             requireFieldCount(parts, 5, line);
             yield new Event(requireNotBlank(parts[2], line),
-                    requireNotBlank(parts[3], line),
-                    requireNotBlank(parts[4], line));
+                    TaskDate.of(requireNotBlank(parts[3], line)),
+                    TaskDate.of(requireNotBlank(parts[4], line)));
         }
         // Unlike the switch over CommandType, this one needs a default: the
         // text comes from a file, so it could say anything at all.

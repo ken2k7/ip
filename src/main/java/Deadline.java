@@ -1,14 +1,14 @@
 /** Represents a task that must be completed by a specified time. */
 public class Deadline extends Task {
-    private final String by;
+    private final TaskDate by;
 
     /**
      * Creates a deadline task.
      *
      * @param description the task description
-     * @param by the deadline, kept as display text
+     * @param by when the task is due
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, TaskDate by) {
         super(description);
         this.by = by;
     }
@@ -25,9 +25,9 @@ public class Deadline extends Task {
         if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
             throw new KenbotException(
                     "A deadline needs a description and a /by part, like:\n"
-                    + "  deadline return book /by Sunday");
+                    + "  deadline return book /by 2019-10-15");
         }
-        return new Deadline(parts[0].trim(), parts[1].trim());
+        return new Deadline(parts[0].trim(), TaskDate.of(parts[1]));
     }
 
     @Override
@@ -42,6 +42,8 @@ public class Deadline extends Task {
      */
     @Override
     public String toStorable() {
-        return "D | " + super.toStorable() + " | " + by;
+        // by.toStorable() rather than by on its own: a plain + would use
+        // toString(), whose display format cannot be read back in.
+        return "D | " + super.toStorable() + " | " + by.toStorable();
     }
 }
