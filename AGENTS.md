@@ -135,38 +135,29 @@ For full marks, the final submission should satisfy all relevant requirements, s
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Coding standard
+
+All Java code in this repository follows the SE-EDU Java coding standard
+(intermediate level). The rules are recorded in the `seedu-java-coding-standard`
+skill; read it before writing or changing any Java code, and apply the rules as
+the code is written rather than tidying up afterwards.
+
+Use the same skill when reviewing Java code, including someone else's pull
+request. Honour the standard's exemptions: getters, setters, overridden methods
+and test methods do not need header comments, so their absence is not a
+violation.
+
 ## Git
 
+All commit messages and branch names follow the SE-EDU Git conventions,
+recorded in the `seedu-git-standard` skill. Read it before proposing a commit
+message. In short: an imperative, capitalised subject with no full stop, kept
+well under 72 characters.
+
+This project prefers a single-line subject of at most four words, with no body,
+which is stricter than the standard and stays compliant with it. Add a body
+only when the subject genuinely cannot carry the reason on its own.
+
 Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
 
-# iP grading criteria
-
-When helping with this individual project, keep the following grading requirements in mind. Mention relevant risks or improvements when reviewing code, planning work, or suggesting changes, but do not let this rubric override the user's explicit request.
-
-## Implementation
-
-For full marks, the final submission should satisfy all relevant requirements:
-
-* More than 90% of required deliverables completed. Requirements labelled optional or if-applicable do not count in this percentage.
-* A fit-for-purpose GUI at least as complete as Part 4 of the JavaFX tutorial.
-* At least two optional increments completed with AI assistance, as required by the course.
-* No major bugs.
-* Reasonable object-oriented design, including some inheritance and sensible division of responsibilities into classes.
-* Javadoc comments on at least half of public classes and public methods.
-* Reasonable code quality: follows Java and Git conventions, has no unnecessary commented-out code, and uses small, focused methods without deep nesting.
-* Some errors handled using exceptions.
-* Good JUnit tests for at least two methods.
-
-## Project management
-
-* Submit some deliverables in at least four of the five iP weeks, from Week 2 to Week 6.
-* Follow course requirements such as using Git/GitHub for each increment and completing peer reviews in at least four weeks.
-* The final five iP commits must follow the course's required Git commit-message subject convention. Do not rewrite past commits merely to meet this requirement; make further legitimate, small commits when appropriate.
-
-## Documentation
-
-* The product website and user guide provide enough guidance for every non-trivial feature.
-* The published documentation has no major formatting errors.
-* Final grading is mainly a manual review; automated checks are progress indicators, not the only standard.
