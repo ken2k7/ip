@@ -1,8 +1,9 @@
 # Kenbot
 
-Kenbot is a console chatbot that keeps track of your tasks. It remembers them
-between runs by saving them to a text file, so you can close it and pick up
-where you left off.
+Kenbot is a chatbot that keeps track of your tasks. It opens as a JavaFX window,
+and the same commands work in a terminal too. It remembers your tasks between
+runs by saving them to a text file, so you can close it and pick up where you
+left off.
 
 It handles three kinds of task — plain to-dos, deadlines with a due date, and
 events that run between two dates — and it can mark them done, delete them, and
@@ -23,10 +24,16 @@ list them back to you.
 Prerequisites: **JDK 25**. The Gradle wrapper is included, so Gradle itself does
 not need to be installed.
 
-Start the app:
+Start the app (opens the window):
 
 ```
 ./gradlew run
+```
+
+Start it in the terminal instead:
+
+```
+./gradlew build && java -cp build/classes/java/main kenbot.Kenbot
 ```
 
 Run the tests:
