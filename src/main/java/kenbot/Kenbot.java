@@ -110,15 +110,15 @@ public class Kenbot {
         String argument = parsed.argument();
 
         String message = switch (command) {
-        case BYE -> "Peace! See you soon!";
-        case LIST -> tasks.describe();
-        case MARK -> "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
-        case UNMARK -> "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
-        case TODO -> addTask(Todo.of(argument));
-        case DEADLINE -> addTask(Deadline.of(argument));
-        case EVENT -> addTask(Event.of(argument));
-        case DELETE -> deleteTask(argument);
-        case FIND -> tasks.find(argument);
+            case BYE -> "Peace! See you soon!";
+            case LIST -> tasks.describe();
+            case MARK -> "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
+            case UNMARK -> "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
+            case TODO -> addTask(Todo.of(argument));
+            case DEADLINE -> addTask(Deadline.of(argument));
+            case EVENT -> addTask(Event.of(argument));
+            case DELETE -> deleteTask(argument);
+            case FIND -> tasks.find(argument);
         };
 
         // Saved after every command rather than only the ones that change the
