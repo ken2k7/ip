@@ -32,6 +32,7 @@ public class Main extends Application {
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
     private Image kenbotImage = new Image(this.getClass().getResourceAsStream("/images/DaKenbot.png"));
+    private Kenbot kenbot = new Kenbot("data/Kenbot.txt");
 
     /**
      * Builds and shows the chat window.
@@ -53,9 +54,6 @@ public class Main extends Application {
 
         userInput = new TextField();
         sendButton = new Button("Send");
-
-        DialogBox dialogBox = new DialogBox("Hello!", userImage);
-        dialogContainer.getChildren().addAll(dialogBox);
 
         AnchorPane mainLayout = new AnchorPane();
         mainLayout.getChildren().addAll(scrollPane, userInput, sendButton);
@@ -94,7 +92,32 @@ public class Main extends Application {
         AnchorPane.setLeftAnchor(userInput, 1.0);
         AnchorPane.setBottomAnchor(userInput, 1.0);
 
+        // Scroll to the bottom whenever the conversation grows, so the newest
+        // message is the one on screen.
+        dialogContainer.heightProperty().addListener((observable) -> scrollPane.setVvalue(1.0));
+
+        // Handling user input: both ways of sending a message run the same code.
+        sendButton.setOnMouseClicked((event) -> handleUserInput());
+        userInput.setOnAction((event) -> handleUserInput());
+
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * Shows what the user typed and what Kenbot said back, then clears the box.
+     *
+     * <p>All the thinking happens in {@link Kenbot#getResponse(String)}; this
+     * method only moves text between the window and Kenbot.</p>
+     */
+    private void handleUserInput() {
+        String userText = userInput.getText();
+        String kenbotText = kenbot.getResponse(userText);
+
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(userText, userImage),
+                DialogBox.getKenbotDialog(kenbotText, kenbotImage));
+
+        userInput.clear();
     }
 }
