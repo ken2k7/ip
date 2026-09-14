@@ -91,13 +91,30 @@ public class Kenbot {
     }
 
     /**
-     * Carries out one command typed by the user.
+     * Answers one command without printing anything.
      *
-     * <p>Working out what was asked for is left to {@link Parser}; this method
-     * only decides what to do about it. The switch below is an expression
-     * rather than a statement on purpose: an expression has to cover every
-     * {@link CommandType}, so the compiler reports any command added to that
-     * list but not handled here.</p>
+     * <p>This is the entry point used by the graphical front end, which needs
+     * the reply as a value it can put in a dialog box rather than as text on a
+     * console. Errors come back the same way, because a window has no separate
+     * error stream to send them to.</p>
+     *
+     * @param input the whole line the user typed
+     * @return what Kenbot has to say in reply
+     */
+    public String getResponse(String input) {
+        if (input.isBlank()) {
+            return "Say something and I'll do my best.";
+        }
+
+        try {
+            return respondTo(Parser.parse(input.trim()));
+        } catch (KenbotException e) {
+            return e.getMessage();
+        }
+    }
+
+    /**
+     * Carries out one command typed by the user and prints the reply.
      *
      * @param input the whole line the user typed, already trimmed and not empty
      * @return true if the user asked to exit, false to carry on
@@ -106,10 +123,29 @@ public class Kenbot {
      */
     private boolean handleCommand(String input) throws KenbotException {
         Parser.ParsedCommand parsed = Parser.parse(input);
-        CommandType command = parsed.command();
+        ui.show(respondTo(parsed));
+        return parsed.command() == CommandType.BYE;
+    }
+
+    /**
+     * Works out what one command should say, and saves the result.
+     *
+     * <p>Both front ends go through here, so the console and the window can
+     * never disagree about what a command does. Working out what was asked for
+     * is left to {@link Parser}; this method only decides what to do about it.
+     * The switch below is an expression rather than a statement on purpose: an
+     * expression has to cover every {@link CommandType}, so the compiler
+     * reports any command added to that list but not handled here.</p>
+     *
+     * @param parsed the command and its argument
+     * @return the reply to show the user
+     * @throws KenbotException if the command's details cannot be used, or the
+     *         task list cannot be saved
+     */
+    private String respondTo(Parser.ParsedCommand parsed) throws KenbotException {
         String argument = parsed.argument();
 
-        String message = switch (command) {
+        String message = switch (parsed.command()) {
             case BYE -> "Peace! See you soon!";
             case LIST -> tasks.describe();
             case MARK -> "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
@@ -125,8 +161,7 @@ public class Kenbot {
         // list: rewriting a file this small costs nothing, and it leaves no way
         // for a change to go unsaved.
         storage.save(tasks);
-        ui.show(message);
-        return command == CommandType.BYE;
+        return message;
     }
 
     /**

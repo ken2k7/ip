@@ -1,0 +1,74 @@
+package kenbot;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+
+/**
+ * Controller for the main window.
+ *
+ * <p>The window's appearance lives in {@code MainWindow.fxml}; this class holds
+ * only what it does. The fields below are not created here: {@link FXML} lets
+ * the loader fill each one from the control carrying the matching
+ * {@code fx:id}, which is why they are still private.</p>
+ */
+public class MainWindow extends AnchorPane {
+
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox dialogContainer;
+    @FXML
+    private TextField userInput;
+    @FXML
+    private Button sendButton;
+
+    private Kenbot kenbot;
+
+    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
+    private Image kenbotImage = new Image(this.getClass().getResourceAsStream("/images/DaKenbot.png"));
+
+    /**
+     * Finishes setting up the window once the controls exist.
+     *
+     * <p>This runs after the loader has filled in the fields above, so it is
+     * the earliest point at which they can be used; a constructor would still
+     * see them as null. Tying the scroll position to the conversation's height
+     * keeps the newest message in view without anyone having to scroll.</p>
+     */
+    @FXML
+    public void initialize() {
+        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+    }
+
+    /**
+     * Gives this window the Kenbot whose answers it should show.
+     *
+     * @param kenbot the chatbot that generates the replies
+     */
+    public void setKenbot(Kenbot kenbot) {
+        this.kenbot = kenbot;
+    }
+
+    /**
+     * Shows what the user typed and what Kenbot said back, then clears the box.
+     *
+     * <p>All the thinking happens in {@link Kenbot#getResponse(String)}; this
+     * method only moves text between the window and Kenbot.</p>
+     */
+    @FXML
+    private void handleUserInput() {
+        String input = userInput.getText();
+        String response = kenbot.getResponse(input);
+
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getKenbotDialog(response, kenbotImage));
+
+        userInput.clear();
+    }
+}
