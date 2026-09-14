@@ -23,6 +23,7 @@ public class Kenbot {
     private final Storage storage;
     private final TaskList tasks;
     private final Ui ui;
+    private boolean isExit = false;
 
     /**
      * Creates a chatbot that keeps its tasks in the given file.
@@ -91,6 +92,29 @@ public class Kenbot {
     }
 
     /**
+     * Returns the words Kenbot opens with, for a front end that shows its own
+     * greeting.
+     *
+     * @return the welcome message
+     */
+    public String getGreeting() {
+        return ui.getGreeting();
+    }
+
+    /**
+     * Returns whether the last command handled was a request to exit.
+     *
+     * <p>The console loop ends itself, but a window has to be told to close, so
+     * this reports the decision {@link Parser} already made rather than having
+     * the caller work out what {@code bye} means for a second time.</p>
+     *
+     * @return true if the last command was {@code bye}
+     */
+    public boolean isExit() {
+        return isExit;
+    }
+
+    /**
      * Answers one command without printing anything.
      *
      * <p>This is the entry point used by the graphical front end, which needs
@@ -124,7 +148,7 @@ public class Kenbot {
     private boolean handleCommand(String input) throws KenbotException {
         Parser.ParsedCommand parsed = Parser.parse(input);
         ui.show(respondTo(parsed));
-        return parsed.command() == CommandType.BYE;
+        return isExit;
     }
 
     /**
@@ -144,6 +168,7 @@ public class Kenbot {
      */
     private String respondTo(Parser.ParsedCommand parsed) throws KenbotException {
         String argument = parsed.argument();
+        isExit = parsed.command() == CommandType.BYE;
 
         String message = switch (parsed.command()) {
             case BYE -> "Peace! See you soon!";

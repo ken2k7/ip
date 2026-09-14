@@ -26,6 +26,14 @@ public class Ui {
             + "\n"
             + "                 Kenbot";
 
+    /**
+     * The welcome message, without the banner.
+     *
+     * <p>Kept apart from {@link #BANNER} because the ASCII art only reads
+     * correctly in a fixed-width console; a window shows these words alone.</p>
+     */
+    private static final String GREETING = "Yo! I'm Kenbot\nHow may I help you today?";
+
     private final Scanner scanner = new Scanner(System.in);
 
     /** Creates a user interface that reads from and writes to the console. */
@@ -36,9 +44,18 @@ public class Ui {
     public void showGreeting() {
         System.out.println(LINE);
         System.out.println(BANNER);
-        System.out.println("Yo! I'm Kenbot");
-        System.out.println("How may I help you today?");
+        System.out.println(GREETING);
         System.out.println(LINE + "\n");
+    }
+
+    /**
+     * Returns the welcome message on its own, for a caller that does its own
+     * printing.
+     *
+     * @return the words Kenbot opens with
+     */
+    public String getGreeting() {
+        return GREETING;
     }
 
     /**
