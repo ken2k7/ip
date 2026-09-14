@@ -44,8 +44,7 @@ public class TaskDateTest {
 
     @Test
     public void of_wordInsteadOfDate_throwsWithTheAcceptedFormat() {
-        KenbotException thrown = assertThrows(KenbotException.class,
-                () -> TaskDate.of("Sunday"));
+        KenbotException thrown = assertThrows(KenbotException.class, () -> TaskDate.of("Sunday"));
         assertEquals("'Sunday' is not a date I understand."
                 + " Write it as yyyy-mm-dd, like: 2019-10-15 1800", thrown.getMessage());
     }

@@ -63,15 +63,13 @@ public class TaskListTest {
 
     @Test
     public void delete_numberPastTheEnd_throwsAndSaysHowManyThereAre() {
-        KenbotException thrown = assertThrows(KenbotException.class,
-                () -> listOf("a").delete("5"));
+        KenbotException thrown = assertThrows(KenbotException.class, () -> listOf("a").delete("5"));
         assertEquals("There is no task 5. You have 1 task(s).", thrown.getMessage());
     }
 
     @Test
     public void delete_onEmptyList_saysTheListIsEmpty() {
-        KenbotException thrown = assertThrows(KenbotException.class,
-                () -> new TaskList().delete("1"));
+        KenbotException thrown = assertThrows(KenbotException.class, () -> new TaskList().delete("1"));
         assertEquals("There is no task 1. Your list is empty.", thrown.getMessage());
     }
 
@@ -124,8 +122,7 @@ public class TaskListTest {
     @Test
     public void getTasks_tryingToAddToTheCopy_isRefused() {
         TaskList tasks = listOf("a");
-        assertThrows(UnsupportedOperationException.class,
-                () -> tasks.getTasks().add(new Todo("b")));
+        assertThrows(UnsupportedOperationException.class, () -> tasks.getTasks().add(new Todo("b")));
         assertEquals(1, tasks.size());
     }
 }

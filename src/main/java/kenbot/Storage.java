@@ -159,24 +159,24 @@ public class Storage {
         // checked before any field is read. Without this, a line missing a
         // field would end the program with an out-of-bounds error.
         Task task = switch (parts[0]) {
-        case "T" -> {
-            requireFieldCount(parts, 3, line);
-            yield new Todo(requireNotBlank(parts[2], line));
-        }
-        case "D" -> {
-            requireFieldCount(parts, 4, line);
-            yield new Deadline(requireNotBlank(parts[2], line),
-                    TaskDate.of(requireNotBlank(parts[3], line)));
-        }
-        case "E" -> {
-            requireFieldCount(parts, 5, line);
-            yield new Event(requireNotBlank(parts[2], line),
-                    TaskDate.of(requireNotBlank(parts[3], line)),
-                    TaskDate.of(requireNotBlank(parts[4], line)));
-        }
-        // Unlike the switch over CommandType, this one needs a default: the
-        // text comes from a file, so it could say anything at all.
-        default -> throw new KenbotException("unknown task type in: " + line);
+            case "T" -> {
+                requireFieldCount(parts, 3, line);
+                yield new Todo(requireNotBlank(parts[2], line));
+            }
+            case "D" -> {
+                requireFieldCount(parts, 4, line);
+                yield new Deadline(requireNotBlank(parts[2], line),
+                        TaskDate.of(requireNotBlank(parts[3], line)));
+            }
+            case "E" -> {
+                requireFieldCount(parts, 5, line);
+                yield new Event(requireNotBlank(parts[2], line),
+                        TaskDate.of(requireNotBlank(parts[3], line)),
+                        TaskDate.of(requireNotBlank(parts[4], line)));
+            }
+            // Unlike the switch over CommandType, this one needs a default: the
+            // text comes from a file, so it could say anything at all.
+            default -> throw new KenbotException("unknown task type in: " + line);
         };
 
         if (isDone) {
@@ -194,9 +194,9 @@ public class Storage {
      */
     private static boolean parseDoneFlag(String field) throws KenbotException {
         return switch (field) {
-        case "0" -> false;
-        case "1" -> true;
-        default -> throw new KenbotException("done flag must be 0 or 1: " + field);
+            case "0" -> false;
+            case "1" -> true;
+            default -> throw new KenbotException("done flag must be 0 or 1: " + field);
         };
     }
 
