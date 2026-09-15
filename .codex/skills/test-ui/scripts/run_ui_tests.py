@@ -150,7 +150,9 @@ def run_case(class_dir: Path, main_class: str, stdin_text: str,
     throwaway folder, rather than in the repository's own data folder.
     """
     return subprocess.run(
-        ["java", "-cp", str(class_dir), main_class],
+        # -ea so the assertions in the code are live during these tests too;
+        # the JVM disables them by default.
+        ["java", "-ea", "-cp", str(class_dir), main_class],
         input=stdin_text + "\n" if stdin_text else "\n",
         capture_output=True, text=True, timeout=timeout,
         cwd=str(work_dir),

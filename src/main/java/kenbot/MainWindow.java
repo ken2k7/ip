@@ -45,6 +45,16 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     public void initialize() {
+        // The loader fills these in by matching each fx:id in MainWindow.fxml
+        // against a field name here, at run time. The compiler never opens the
+        // FXML, so renaming one side and not the other still builds: the field
+        // stays null, the window looks correct, and the first click fails with
+        // nothing shown. This is the one link in the program that nothing else
+        // verifies.
+        assert scrollPane != null && dialogContainer != null
+                && userInput != null && sendButton != null
+                : "an fx:id in MainWindow.fxml no longer matches a field here";
+
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 

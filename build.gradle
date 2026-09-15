@@ -74,4 +74,9 @@ shadowJar {
 
 run {
     standardInput = System.in
+
+    // Assertions are off by default in the JVM, and Gradle's run task leaves
+    // them off. The test task already enables them, so without this line the
+    // assertions would hold during testing and be dead in the running app.
+    enableAssertions = true
 }
