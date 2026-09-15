@@ -117,11 +117,7 @@ public class TaskList {
         if (tasks.isEmpty()) {
             return "You have no tasks yet.";
         }
-        StringBuilder text = new StringBuilder("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            text.append("\n").append(i + 1).append(".").append(tasks.get(i));
-        }
-        return text.toString();
+        return formatNumbered("Here are the tasks in your list:", tasks);
     }
 
     /**
@@ -152,13 +148,28 @@ public class TaskList {
         if (matches.isEmpty()) {
             return "No tasks match '" + keyword.trim() + "'.";
         }
+        return formatNumbered("Here are the matching tasks in your list:", matches);
+    }
 
-        // Numbering stays a plain loop on purpose. A stream has no position to
-        // offer, so this would need IntStream.range over the indices and a
-        // get() inside it, which reads worse than the loop it replaced.
-        StringBuilder text = new StringBuilder("Here are the matching tasks in your list:");
-        for (int i = 0; i < matches.size(); i++) {
-            text.append("\n").append(i + 1).append(".").append(matches.get(i));
+    /**
+     * Returns tasks as a numbered list under a heading.
+     *
+     * <p>Numbering starts at 1 and follows the order of the list given, so a
+     * caller that passes only some of the tasks gets those numbered 1, 2, 3
+     * rather than keeping their positions in the full list.</p>
+     *
+     * <p>Static because it works only on what it is handed: it is the one place
+     * that decides how a list of tasks is laid out, so {@code describe} and
+     * {@code find} cannot drift apart.</p>
+     *
+     * @param heading the line shown above the tasks
+     * @param shown the tasks to list, in the order they should appear
+     * @return the heading followed by one numbered line per task
+     */
+    private static String formatNumbered(String heading, List<Task> shown) {
+        StringBuilder text = new StringBuilder(heading);
+        for (int i = 0; i < shown.size(); i++) {
+            text.append("\n").append(i + 1).append(".").append(shown.get(i));
         }
         return text.toString();
     }
