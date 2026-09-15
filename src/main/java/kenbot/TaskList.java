@@ -138,12 +138,12 @@ public class TaskList {
         }
 
         String wanted = keyword.trim().toLowerCase();
-        List<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(wanted)) {
-                matches.add(task);
-            }
-        }
+
+        // Choosing which tasks match is what a stream does best: one filter,
+        // and no counter kept by hand.
+        List<Task> matches = tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(wanted))
+                .toList();
 
         if (matches.isEmpty()) {
             return "No tasks match '" + keyword.trim() + "'.";
