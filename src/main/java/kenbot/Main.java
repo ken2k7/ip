@@ -1,6 +1,7 @@
 package kenbot;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +40,12 @@ public class Main extends Application {
 
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            // Same reasoning as in DialogBox: the FXML ships inside the JAR, so
+            // this cannot be recovered from. Printing and returning would leave
+            // start() finishing normally without ever calling stage.show(), so
+            // the program would sit there running with no window and no sign of
+            // what went wrong.
+            throw new UncheckedIOException("Could not load /view/MainWindow.fxml", e);
         }
     }
 }

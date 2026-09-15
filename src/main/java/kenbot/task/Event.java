@@ -4,6 +4,12 @@ import kenbot.KenbotException;
 
 /** Represents a task that takes place between a start and end time. */
 public class Event extends Task {
+
+    /** Shown whenever the text after {@code event} is missing one of its three parts. */
+    private static final String USAGE_MESSAGE =
+            "An event needs a description, a /from and a /to, like:\n"
+            + "  event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600";
+
     private final TaskDate from;
     private final TaskDate to;
 
@@ -29,18 +35,24 @@ public class Event extends Task {
      * @throws KenbotException if any of the three parts is missing or blank
      */
     public static Event of(String argument) throws KenbotException {
-        String[] fromParts = argument.split(" /from ", 2);
-        String[] toParts = fromParts.length == 2
-                ? fromParts[1].split(" /to ", 2)
-                : new String[0];
-        if (fromParts.length != 2 || toParts.length != 2
-                || fromParts[0].isBlank() || toParts[0].isBlank() || toParts[1].isBlank()) {
-            throw new KenbotException(
-                    "An event needs a description, a /from and a /to, like:\n"
-                    + "  event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600");
+        String[] descriptionAndRest = argument.split(" /from ", 2);
+        if (descriptionAndRest.length != 2) {
+            throw new KenbotException(USAGE_MESSAGE);
         }
-        return new Event(fromParts[0].trim(), TaskDate.of(toParts[0]),
-                TaskDate.of(toParts[1]));
+
+        String[] startAndEnd = descriptionAndRest[1].split(" /to ", 2);
+        if (startAndEnd.length != 2) {
+            throw new KenbotException(USAGE_MESSAGE);
+        }
+
+        String description = descriptionAndRest[0];
+        String start = startAndEnd[0];
+        String end = startAndEnd[1];
+        if (description.isBlank() || start.isBlank() || end.isBlank()) {
+            throw new KenbotException(USAGE_MESSAGE);
+        }
+
+        return new Event(description.trim(), TaskDate.of(start), TaskDate.of(end));
     }
 
     /**
