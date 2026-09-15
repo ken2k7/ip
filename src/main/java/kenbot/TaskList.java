@@ -137,17 +137,23 @@ public class TaskList {
         }
 
         String wanted = keyword.trim().toLowerCase();
-        StringBuilder text = new StringBuilder("Here are the matching tasks in your list:");
-        int found = 0;
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(wanted)) {
-                found++;
-                text.append("\n").append(found).append(".").append(task);
-            }
+
+        // Choosing which tasks match is what a stream does best: one filter,
+        // and no counter kept by hand.
+        List<Task> matches = tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(wanted))
+                .toList();
+
+        if (matches.isEmpty()) {
+            return "No tasks match '" + keyword.trim() + "'.";
         }
 
-        if (found == 0) {
-            return "No tasks match '" + keyword.trim() + "'.";
+        // Numbering stays a plain loop on purpose. A stream has no position to
+        // offer, so this would need IntStream.range over the indices and a
+        // get() inside it, which reads worse than the loop it replaced.
+        StringBuilder text = new StringBuilder("Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.size(); i++) {
+            text.append("\n").append(i + 1).append(".").append(matches.get(i));
         }
         return text.toString();
     }
