@@ -1,6 +1,7 @@
 package kenbot;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +39,13 @@ public class DialogBox extends HBox {
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            // DialogBox.fxml is packaged inside the JAR, so failing to read it
+            // means the build is broken rather than anything a user can fix or
+            // this class can carry on without. Printing and continuing would
+            // leave dialog and displayPicture null, and the next two lines
+            // would then fail with a NullPointerException naming neither the
+            // file nor the real cause.
+            throw new UncheckedIOException("Could not load /view/DialogBox.fxml", e);
         }
 
         dialog.setText(text);
