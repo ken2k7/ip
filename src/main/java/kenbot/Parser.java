@@ -31,6 +31,13 @@ public class Parser {
      *         a command Kenbot knows
      */
     public static ParsedCommand parse(String input) throws KenbotException {
+        // The Javadoc above promises this; an assertion is the same sentence in
+        // a form that can fail. Ui.readCommand() trims, run() skips empty
+        // lines, and getResponse() trims after its own blank check, so a
+        // failure here means a caller stopped keeping that promise.
+        assert input != null && !input.isBlank() && input.equals(input.trim())
+                : "parse expects a trimmed, non-empty line, got: '" + input + "'";
+
         // Rejected here rather than when saving: once a description holding a
         // bar reaches the file, its line can no longer be split back into the
         // right fields, and the task would silently come back incomplete.

@@ -182,6 +182,13 @@ public class Kenbot {
             case FIND -> tasks.find(argument);
         };
 
+        // Both front ends show this without checking it first, and the window
+        // would render an empty bubble with nothing to explain it. The switch
+        // is exhaustive, so only a new command arm returning nothing could
+        // break this.
+        assert message != null && !message.isBlank()
+                : "every command must produce something to show the user";
+
         // Saved after every command rather than only the ones that change the
         // list: rewriting a file this small costs nothing, and it leaves no way
         // for a change to go unsaved.

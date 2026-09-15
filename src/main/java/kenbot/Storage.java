@@ -41,6 +41,13 @@ public class Storage {
      */
     public Storage(String filePath) {
         this.file = Path.of(filePath);
+
+        // save() calls Files.createDirectories(file.getParent()), and
+        // getParent() is null for a bare file name such as "Kenbot.txt". The
+        // path is always written by a programmer, never typed by a user, so a
+        // missing folder is a coding mistake rather than something to report.
+        assert file.getParent() != null
+                : "the save file needs a folder, like data/Kenbot.txt, not " + filePath;
     }
 
     /**
@@ -92,6 +99,14 @@ public class Storage {
                 skipped++;
             }
         }
+        // Every non-blank line either became a task or was counted as skipped.
+        // Nothing else in the program checks this, so a stray continue or a
+        // forgotten skipped++ would lose tasks with no visible symptom. The
+        // count sits inside the assertion so it costs nothing once disabled.
+        assert tasks.size() + skipped
+                == lines.stream().filter(line -> !line.isBlank()).count()
+                : tasks.size() + " loaded and " + skipped + " skipped do not"
+                        + " account for every line of " + file;
         return new LoadResult(tasks, skipped);
     }
 
