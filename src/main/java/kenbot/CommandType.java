@@ -1,5 +1,7 @@
 package kenbot;
 
+import java.util.Arrays;
+
 /**
  * The commands Kenbot understands.
  *
@@ -45,11 +47,13 @@ public enum CommandType {
      * @throws KenbotException if the word does not name a command
      */
     public static CommandType from(String word) throws KenbotException {
-        for (CommandType command : values()) {
-            if (command.name().toLowerCase().equals(word)) {
-                return command;
-            }
-        }
-        throw new KenbotException("I don't know what that means.");
+        // findFirst stops at the match rather than reading the rest, the same
+        // as the early return did. orElseThrow takes a supplier, so the
+        // exception is built only when nothing matched, and it is allowed to be
+        // a checked one.
+        return Arrays.stream(values())
+                .filter(command -> command.name().toLowerCase().equals(word))
+                .findFirst()
+                .orElseThrow(() -> new KenbotException("I don't know what that means."));
     }
 }

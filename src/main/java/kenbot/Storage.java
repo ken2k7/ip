@@ -122,10 +122,12 @@ public class Storage {
      * @throws KenbotException if the file cannot be written
      */
     public void save(TaskList tasks) throws KenbotException {
-        List<String> lines = new ArrayList<>();
-        for (Task task : tasks.getTasks()) {
-            lines.add(task.toStorable());
-        }
+        // Every task becomes exactly one line and nothing is filtered or
+        // counted, so the loop was only ever spelling out "map each task to its
+        // saved form". The stream says that directly.
+        List<String> lines = tasks.getTasks().stream()
+                .map(Task::toStorable)
+                .toList();
 
         try {
             // The folder is made first, because writing fails if data/ is
