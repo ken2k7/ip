@@ -55,6 +55,38 @@ Write the user guide
 Merge branch-A-CodingStandard
 ```
 
+## A-FullCommitMessage (Week 7 task)
+
+For **2-3 commits pushed this week**, the four-word preference above is
+deliberately set aside and a full message with a body is required instead.
+Tag one of them `A-FullCommitMessage`.
+
+Such a message looks like:
+
+```
+Refactor GUI to use FXML
+
+The GUI is built entirely in Java, so layout, styling and event wiring
+all live in one class. This makes the layout hard to find and means the
+application must be rebuilt to see the effect of any visual change.
+
+Move the layout into FXML files and keep only the behaviour in Java:
+
+* MainWindow.fxml holds the window, MainWindow.java its controller
+* DialogBox.fxml uses the fx:root construct so a dialog box can still be
+  created with a constructor
+
+The FXML files can now be edited in Scene Builder without touching Java.
+```
+
+Body rules: blank line after the subject, wrapped at 72 characters, blank
+lines between paragraphs, bullets where they read better than prose. Say
+**what and why, not how** -- the diff already shows how. Avoid "currently"
+and "originally" when describing the existing state.
+
+Ask which commits should carry a full message rather than assuming; most
+commits in this project still take the short form.
+
 ## Checking existing commits
 
 ```bash
