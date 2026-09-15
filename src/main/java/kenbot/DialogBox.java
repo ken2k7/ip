@@ -1,6 +1,7 @@
 package kenbot;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,13 +39,21 @@ public class DialogBox extends HBox {
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            // DialogBox.fxml is packaged inside the JAR, so failing to read it
+            // means the build is broken rather than anything a user can fix or
+            // this class can carry on without. Printing and continuing would
+            // leave dialog and displayPicture null, and the next two lines
+            // would then fail with a NullPointerException naming neither the
+            // file nor the real cause.
+            throw new UncheckedIOException("Could not load /view/DialogBox.fxml", e);
         }
 
-        // Reached even when load() failed above, since the catch only reports
-        // and carries on. Either a failed load or an fx:id that no longer
-        // matches leaves these null, and the two lines below would then blame
-        // whichever caller happened to create this box.
+        // The loader fills these in by matching each fx:id in DialogBox.fxml
+        // against a field name here, at run time, and the compiler never opens
+        // the FXML to check that the two still agree. A failed load throws
+        // above, so reaching this line with a null field means a renamed
+        // fx:id, which would otherwise surface as a NullPointerException on
+        // the next line instead.
         assert dialog != null && displayPicture != null
                 : "DialogBox.fxml did not fill in its controls";
 
