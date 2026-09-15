@@ -48,10 +48,12 @@ public class DialogBox extends HBox {
             throw new UncheckedIOException("Could not load /view/DialogBox.fxml", e);
         }
 
-        // Reached even when load() failed above, since the catch only reports
-        // and carries on. Either a failed load or an fx:id that no longer
-        // matches leaves these null, and the two lines below would then blame
-        // whichever caller happened to create this box.
+        // The loader fills these in by matching each fx:id in DialogBox.fxml
+        // against a field name here, at run time, and the compiler never opens
+        // the FXML to check that the two still agree. A failed load throws
+        // above, so reaching this line with a null field means a renamed
+        // fx:id, which would otherwise surface as a NullPointerException on
+        // the next line instead.
         assert dialog != null && displayPicture != null
                 : "DialogBox.fxml did not fill in its controls";
 
