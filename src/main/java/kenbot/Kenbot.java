@@ -173,8 +173,8 @@ public class Kenbot {
         String message = switch (parsed.command()) {
             case BYE -> "Peace! See you soon!";
             case LIST -> tasks.describe();
-            case MARK -> "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
-            case UNMARK -> "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
+            case MARK -> markTask(argument);
+            case UNMARK -> unmarkTask(argument);
             case TODO -> addTask(Todo.of(argument));
             case DEADLINE -> addTask(Deadline.of(argument));
             case EVENT -> addTask(Event.of(argument));
@@ -187,6 +187,28 @@ public class Kenbot {
         // for a change to go unsaved.
         storage.save(tasks);
         return message;
+    }
+
+    /**
+     * Marks a task as done and describes what changed.
+     *
+     * @param argument the task number, as the user typed it
+     * @return the confirmation to show the user
+     * @throws KenbotException if the number is missing, not a number, or out of range
+     */
+    private String markTask(String argument) throws KenbotException {
+        return "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
+    }
+
+    /**
+     * Marks a task as not done and describes what changed.
+     *
+     * @param argument the task number, as the user typed it
+     * @return the confirmation to show the user
+     * @throws KenbotException if the number is missing, not a number, or out of range
+     */
+    private String unmarkTask(String argument) throws KenbotException {
+        return "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
     }
 
     /**
