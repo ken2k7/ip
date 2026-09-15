@@ -38,6 +38,11 @@ public class TaskDate {
      * @param time the time of day as text, or an empty string if there is none
      */
     private TaskDate(LocalDate date, String time) {
+        // Both toString() and toStorable() branch on time.isEmpty() rather than
+        // on null, so a null here would not read as "no time given" -- it would
+        // throw. The one factory method is careful to pass "" instead, and this
+        // records that the two must stay in step.
+        assert time != null : "time is empty when absent, never null";
         this.date = date;
         this.time = time;
     }

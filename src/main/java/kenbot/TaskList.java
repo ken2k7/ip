@@ -26,6 +26,11 @@ public class TaskList {
      * @param initialTasks the tasks to start with, in the order they are stored
      */
     public TaskList(List<Task> initialTasks) {
+        // Storage always hands over a list, empty at worst, even when the save
+        // file is missing or unreadable. A null here would mean Storage broke
+        // that promise, and would otherwise surface much later as a confusing
+        // NullPointerException.
+        assert initialTasks != null : "Storage must supply a list, not null";
         tasks.addAll(initialTasks);
     }
 
@@ -190,6 +195,14 @@ public class TaskList {
             throw new KenbotException("There is no task " + number + ". You have "
                     + tasks.size() + " task(s).");
         }
-        return number - 1;
+
+        int index = number - 1;
+        // Every caller feeds this straight to tasks.get() or tasks.remove()
+        // without checking it again. The checks above are what make that safe,
+        // so this records the promise: reorder or loosen them and the failure
+        // shows up here rather than as an out-of-bounds error further away.
+        assert index >= 0 && index < tasks.size()
+                : "indexOf produced " + index + " for a list of " + tasks.size();
+        return index;
     }
 }
