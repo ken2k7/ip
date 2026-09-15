@@ -41,6 +41,13 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
 
+        // Reached even when load() failed above, since the catch only reports
+        // and carries on. Either a failed load or an fx:id that no longer
+        // matches leaves these null, and the two lines below would then blame
+        // whichever caller happened to create this box.
+        assert dialog != null && displayPicture != null
+                : "DialogBox.fxml did not fill in its controls";
+
         dialog.setText(text);
         displayPicture.setImage(img);
     }
