@@ -35,7 +35,10 @@ public class Event extends Task {
      * @throws KenbotException if any of the three parts is missing or blank
      */
     public static Event of(String argument) throws KenbotException {
-        String[] descriptionAndRest = argument.split(" /from ", 2);
+        // Tags come off before /from and /to are looked for, so neither split
+        // below can pick a trailing tag up as part of a date.
+        Tag.TaggedText split = Tag.splitTrailingTags(argument);
+        String[] descriptionAndRest = split.text().split(" /from ", 2);
         if (descriptionAndRest.length != 2) {
             throw new KenbotException(USAGE_MESSAGE);
         }
@@ -52,32 +55,43 @@ public class Event extends Task {
             throw new KenbotException(USAGE_MESSAGE);
         }
 
-        return new Event(description.trim(), TaskDate.of(start), TaskDate.of(end));
+        Event event = new Event(description.trim(), TaskDate.of(start), TaskDate.of(end));
+        split.tags().forEach(event::addTag);
+        return event;
     }
 
     /**
-     * Returns this event as it should be shown on screen.
+     * Returns the letter an event is saved under.
      *
-     * @return {@code [E]} followed by the shared task text and both dates
+     * @return {@code "E"}
      */
     @Override
-    public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+    protected String getTypeCode() {
+        return "E";
     }
 
     /**
-     * Returns this event as {@code E | done | description | from | to}.
+     * Returns the start and end as they are shown on screen.
      *
-     * <p>The start and end are kept as two fields rather than one so that
-     * reading the line back does not have to guess where to split them.</p>
-     *
-     * @return the save-file line for this event
+     * @return {@code (from: ... to: ...)}, with a leading space
      */
     @Override
-    public String toStorable() {
+    protected String getDisplayDetails() {
+        return " (from: " + from + " to: " + to + ")";
+    }
+
+    /**
+     * Returns the start and end as the save file holds them.
+     *
+     * <p>They are kept as two fields rather than one so that reading the line
+     * back does not have to guess where to split them.</p>
+     *
+     * @return the two fields an event adds after its description
+     */
+    @Override
+    protected String getStorableDetails() {
         // toStorable() on each date rather than the dates themselves: a plain
         // + would use toString(), whose display format cannot be read back in.
-        return "E | " + super.toStorable() + " | " + from.toStorable()
-                + " | " + to.toStorable();
+        return from.toStorable() + " | " + to.toStorable();
     }
 }

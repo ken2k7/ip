@@ -1,16 +1,36 @@
 package kenbot.task;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
- * Represents a task and whether it has been completed.
+ * Represents a task, whether it has been completed, and any tags on it.
  *
- * <p>Specific kinds of tasks extend this class to add their own details.</p>
+ * <p>Specific kinds of tasks extend this class to add their own details. They do
+ * so by answering {@link #getTypeCode()}, {@link #getDisplayDetails()} and
+ * {@link #getStorableDetails()} rather than by wrapping {@link #toString()}, so
+ * that this class can put the tags at the end of the line, after whatever the
+ * subclass contributed.</p>
  */
 public class Task {
     private final String description;
+
+    /**
+     * The tags on this task.
+     *
+     * <p>A {@link Set} so that adding the same tag twice changes nothing, and a
+     * {@link LinkedHashSet} specifically so the tags are shown in the order they
+     * were added rather than in some order that shifts between runs.</p>
+     */
+    private final Set<Tag> tags = new LinkedHashSet<>();
+
     private boolean isDone;
 
     /**
-     * Creates an incomplete task with the given description.
+     * Creates an incomplete, untagged task with the given description.
      *
      * @param description the task description
      */
@@ -48,6 +68,67 @@ public class Task {
     }
 
     /**
+     * Attaches a tag to this task.
+     *
+     * @param tag the tag to attach
+     * @return true if the tag was added, false if the task already had it
+     */
+    public boolean addTag(Tag tag) {
+        return tags.add(tag);
+    }
+
+    /**
+     * Removes a tag from this task.
+     *
+     * @param tag the tag to remove
+     * @return true if the tag was removed, false if the task did not have it
+     */
+    public boolean removeTag(Tag tag) {
+        return tags.remove(tag);
+    }
+
+    /**
+     * Returns this task's tags for reading, without exposing the real set.
+     *
+     * <p>Guarded the same way {@code TaskList.getTasks()} is: a caller cannot add
+     * or remove a tag behind this class's back.</p>
+     *
+     * @return the tags, in the order they were added
+     */
+    public Set<Tag> getTags() {
+        return Collections.unmodifiableSet(tags);
+    }
+
+    /**
+     * Returns the letter this kind of task is saved under.
+     *
+     * @return the save-file type code, which each kind of task overrides
+     */
+    protected String getTypeCode() {
+        return "?";
+    }
+
+    /**
+     * Returns what this kind of task adds to the line shown on screen, such as
+     * a deadline's {@code (by: ...)}.
+     *
+     * @return the extra text, already spaced, or an empty string if there is none
+     */
+    protected String getDisplayDetails() {
+        return "";
+    }
+
+    /**
+     * Returns the save-file fields this kind of task adds after its description,
+     * already separated by {@code |} if there is more than one.
+     *
+     * @return the extra fields, or an empty string if there are none
+     */
+    protected String getStorableDetails() {
+        return "";
+    }
+
+    /**
      * Returns this task as one line of text for the save file.
      *
      * <p>Kept separate from {@link #toString()} on purpose: that method is for a
@@ -56,19 +137,48 @@ public class Task {
      * instead of brackets and labels, and writes the done state as {@code 1} or
      * {@code 0} rather than the {@code X} shown on screen.</p>
      *
-     * @return the done flag and description, separated by {@code |}
+     * <p>The tags are written last, and only when there are any, so a task
+     * without tags produces exactly the line it produced before tags existed and
+     * a save file written by an older version still reads back.</p>
+     *
+     * @return the whole save-file line for this task
      */
     public String toStorable() {
-        return (isDone ? "1" : "0") + " | " + description;
+        StringBuilder line = new StringBuilder(getTypeCode())
+                .append(" | ").append(isDone ? "1" : "0")
+                .append(" | ").append(description);
+
+        String details = getStorableDetails();
+        if (!details.isEmpty()) {
+            line.append(" | ").append(details);
+        }
+        if (!tags.isEmpty()) {
+            line.append(" | ").append(joinTags(Tag::getName));
+        }
+        return line.toString();
     }
 
     /**
      * Returns this task as it should be shown on screen.
      *
-     * @return the done marker in brackets, followed by the description
+     * @return the type and done markers, the description, this kind of task's
+     *         own details, and any tags
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        String shown = "[" + getTypeCode() + "][" + getStatusIcon() + "] "
+                + description + getDisplayDetails();
+        return tags.isEmpty() ? shown : shown + " " + joinTags(Tag::toString);
+    }
+
+    /**
+     * Joins the tags into one space-separated piece of text.
+     *
+     * @param form how to write a single tag: with its {@code #} for the screen,
+     *             without it for the save file
+     * @return the tags as text
+     */
+    private String joinTags(Function<Tag, String> form) {
+        return tags.stream().map(form).collect(Collectors.joining(" "));
     }
 }
