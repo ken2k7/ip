@@ -8,6 +8,7 @@ import java.util.List;
 
 import kenbot.task.Deadline;
 import kenbot.task.Event;
+import kenbot.task.Tag;
 import kenbot.task.Task;
 import kenbot.task.TaskDate;
 import kenbot.task.Todo;
@@ -175,18 +176,23 @@ public class Storage {
         // Each kind of task has its own number of fields, so the count is
         // checked before any field is read. Without this, a line missing a
         // field would end the program with an out-of-bounds error.
+        // How many fields this kind of task uses before its optional tag field.
+        int untagged;
         Task task = switch (parts[0]) {
             case "T" -> {
-                requireFieldCount(parts, 3, line);
+                untagged = 3;
+                requireFieldCount(parts, untagged, line);
                 yield new Todo(requireNotBlank(parts[2], line));
             }
             case "D" -> {
-                requireFieldCount(parts, 4, line);
+                untagged = 4;
+                requireFieldCount(parts, untagged, line);
                 yield new Deadline(requireNotBlank(parts[2], line),
                         TaskDate.of(requireNotBlank(parts[3], line)));
             }
             case "E" -> {
-                requireFieldCount(parts, 5, line);
+                untagged = 5;
+                requireFieldCount(parts, untagged, line);
                 yield new Event(requireNotBlank(parts[2], line),
                         TaskDate.of(requireNotBlank(parts[3], line)),
                         TaskDate.of(requireNotBlank(parts[4], line)));
@@ -196,10 +202,30 @@ public class Storage {
             default -> throw new KenbotException("unknown task type in: " + line);
         };
 
+        if (parts.length > untagged) {
+            addTags(task, parts[untagged], line);
+        }
         if (isDone) {
             task.markAsDone();
         }
         return task;
+    }
+
+    /**
+     * Reads the optional tag field of a saved line onto a task.
+     *
+     * @param task the task the tags belong to
+     * @param field the tag field, holding names separated by spaces
+     * @param line the whole line, used in the message
+     * @throws KenbotException if the field is empty or holds an unusable tag
+     */
+    private static void addTags(Task task, String field, String line)
+            throws KenbotException {
+        // A present but empty field means the line was written wrong: a task
+        // with no tags leaves the field out altogether.
+        for (String name : requireNotBlank(field, line).trim().split("\\s+")) {
+            task.addTag(Tag.of(name));
+        }
     }
 
     /**
@@ -218,19 +244,23 @@ public class Storage {
     }
 
     /**
-     * Checks that a saved line was split into exactly the expected number of
-     * fields, so that reading a field cannot run off the end of the array.
+     * Checks that a saved line holds the fields this kind of task needs, so that
+     * reading a field cannot run off the end of the array.
+     *
+     * <p>One extra field is allowed, and only one: that is the tag field, which
+     * a task without tags leaves out. Accepting either count is what lets a save
+     * file written before tags existed still be read.</p>
      *
      * @param parts the fields the line was split into
-     * @param expected how many fields this kind of task needs
+     * @param expected how many fields this kind of task needs without tags
      * @param line the whole line, used in the message
-     * @throws KenbotException if the count does not match
+     * @throws KenbotException if the count is neither the expected one nor one more
      */
     private static void requireFieldCount(String[] parts, int expected, String line)
             throws KenbotException {
-        if (parts.length != expected) {
-            throw new KenbotException("expected " + expected + " fields, found "
-                    + parts.length + " in: " + line);
+        if (parts.length != expected && parts.length != expected + 1) {
+            throw new KenbotException("expected " + expected + " or " + (expected + 1)
+                    + " fields, found " + parts.length + " in: " + line);
         }
     }
 
