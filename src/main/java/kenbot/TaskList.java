@@ -2,7 +2,9 @@ package kenbot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 
+import kenbot.task.Tag;
 import kenbot.task.Task;
 
 /**
@@ -139,16 +141,110 @@ public class TaskList {
 
         String wanted = keyword.trim().toLowerCase();
 
+        // A keyword starting with # asks about tags rather than descriptions,
+        // matching how a tag is written when a task is created.
+        boolean searchesTags = wanted.startsWith("#");
+        String needle = searchesTags ? wanted.substring(1) : wanted;
+        if (needle.isBlank()) {
+            throw new KenbotException("Tell me which tag to look for, like: find #fun");
+        }
+
         // Choosing which tasks match is what a stream does best: one filter,
         // and no counter kept by hand.
         List<Task> matches = tasks.stream()
-                .filter(task -> task.getDescription().toLowerCase().contains(wanted))
+                .filter(task -> searchesTags ? hasMatchingTag(task, needle)
+                        : task.getDescription().toLowerCase().contains(needle))
                 .toList();
 
         if (matches.isEmpty()) {
             return "No tasks match '" + keyword.trim() + "'.";
         }
         return formatNumbered("Here are the matching tasks in your list:", matches);
+    }
+
+    /**
+     * Returns whether any of a task's tags contains the given text.
+     *
+     * <p>Part of a tag counts, and upper and lower case are ignored, so searching
+     * behaves the same way whether the keyword is a tag or a description. Note
+     * that two tags differing only in case are still two different tags; this
+     * only affects how they are searched for.</p>
+     *
+     * @param task the task to look at
+     * @param wanted the text to look for, already lower case and without its #
+     * @return true if one of the task's tags contains the text
+     */
+    private static boolean hasMatchingTag(Task task, String wanted) {
+        return task.getTags().stream()
+                .anyMatch(tag -> tag.getName().toLowerCase().contains(wanted));
+    }
+
+    /**
+     * Attaches one or more tags to a task.
+     *
+     * @param argument the task number followed by the tags, as the user typed them
+     * @return the task with its new tags, so the caller can display it
+     * @throws KenbotException if the number or any of the tags cannot be used
+     */
+    public Task tag(String argument) throws KenbotException {
+        return applyTags(argument, "tag", Task::addTag,
+                "That task already has every one of those tags.");
+    }
+
+    /**
+     * Removes one or more tags from a task.
+     *
+     * @param argument the task number followed by the tags, as the user typed them
+     * @return the task without those tags, so the caller can display it
+     * @throws KenbotException if the number or any of the tags cannot be used
+     */
+    public Task untag(String argument) throws KenbotException {
+        return applyTags(argument, "untag", Task::removeTag,
+                "That task doesn't have any of those tags.");
+    }
+
+    /**
+     * Adds or removes the tags named after a task number.
+     *
+     * <p>Both commands read their argument the same way and differ only in what
+     * they do with each tag, so the reading is written once here. Nothing
+     * changing is reported rather than passed over quietly, because a command
+     * that appears to work but does nothing is worse than one that explains
+     * itself.</p>
+     *
+     * @param argument the task number followed by the tags
+     * @param commandName the command being carried out, used in the message
+     * @param change what to do with one tag, which returns whether it changed anything
+     * @param nothingChanged what to say if no tag changed
+     * @return the task, so the caller can display it
+     * @throws KenbotException if the number or any of the tags cannot be used,
+     *         or if no tag changed
+     */
+    private Task applyTags(String argument, String commandName,
+            BiPredicate<Task, Tag> change, String nothingChanged) throws KenbotException {
+        String[] parts = argument.trim().split("\\s+", 2);
+        if (parts.length < 2 || parts[1].isBlank()) {
+            throw new KenbotException("Tell me which task to " + commandName
+                    + " and with what, like: " + commandName + " 2 fun");
+        }
+
+        Task task = tasks.get(indexOf(parts[0], commandName));
+
+        // Every tag is checked before any is applied, so a typo in the second
+        // tag cannot leave the first one half-applied.
+        List<Tag> wanted = new ArrayList<>();
+        for (String name : parts[1].trim().split("\\s+")) {
+            wanted.add(Tag.of(name));
+        }
+
+        boolean changedSomething = false;
+        for (Tag tag : wanted) {
+            changedSomething |= change.test(task, tag);
+        }
+        if (!changedSomething) {
+            throw new KenbotException(nothingChanged);
+        }
+        return task;
     }
 
     /**

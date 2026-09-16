@@ -180,6 +180,8 @@ public class Kenbot {
             case EVENT -> addTask(Event.of(argument));
             case DELETE -> deleteTask(argument);
             case FIND -> tasks.find(argument);
+            case TAG -> tagTask(argument);
+            case UNTAG -> untagTask(argument);
         };
 
         // Both front ends show this without checking it first, and the window
@@ -216,6 +218,28 @@ public class Kenbot {
      */
     private String unmarkTask(String argument) throws KenbotException {
         return "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
+    }
+
+    /**
+     * Attaches tags to a task and describes the result.
+     *
+     * @param argument the task number and tags, as the user typed them
+     * @return the confirmation to show the user
+     * @throws KenbotException if the number or any of the tags cannot be used
+     */
+    private String tagTask(String argument) throws KenbotException {
+        return "Tagged it:\n  " + tasks.tag(argument);
+    }
+
+    /**
+     * Removes tags from a task and describes the result.
+     *
+     * @param argument the task number and tags, as the user typed them
+     * @return the confirmation to show the user
+     * @throws KenbotException if the number or any of the tags cannot be used
+     */
+    private String untagTask(String argument) throws KenbotException {
+        return "Removed that:\n  " + tasks.untag(argument);
     }
 
     /**

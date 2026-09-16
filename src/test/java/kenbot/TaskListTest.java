@@ -125,4 +125,98 @@ public class TaskListTest {
         assertThrows(UnsupportedOperationException.class, () -> tasks.getTasks().add(new Todo("b")));
         assertEquals(1, tasks.size());
     }
+
+    @Test
+    public void tag_oneTag_showsItOnTheTask() throws KenbotException {
+        assertEquals("[T][ ] a #fun", listOf("a").tag("1 fun").toString());
+    }
+
+    @Test
+    public void tag_leadingHash_isAccepted() throws KenbotException {
+        assertEquals("[T][ ] a #fun", listOf("a").tag("1 #fun").toString());
+    }
+
+    @Test
+    public void tag_severalTags_addsThemAllInOrder() throws KenbotException {
+        assertEquals("[T][ ] a #fun #work", listOf("a").tag("1 fun work").toString());
+    }
+
+    @Test
+    public void tag_tagTheTaskAlreadyHas_throwsRatherThanDoingNothingQuietly()
+            throws KenbotException {
+        TaskList tasks = listOf("a");
+        tasks.tag("1 fun");
+        assertThrows(KenbotException.class, () -> tasks.tag("1 fun"));
+    }
+
+    @Test
+    public void tag_noTagGiven_throws() {
+        assertThrows(KenbotException.class, () -> listOf("a").tag("1"));
+    }
+
+    @Test
+    public void tag_numberOutOfRange_throws() {
+        assertThrows(KenbotException.class, () -> listOf("a").tag("2 fun"));
+    }
+
+    @Test
+    public void tag_unusableTag_throws() {
+        assertThrows(KenbotException.class, () -> listOf("a").tag("1 bad|tag"));
+    }
+
+    @Test
+    public void tag_oneBadTagAmongGoodOnes_leavesTheTaskUnchanged() {
+        TaskList tasks = listOf("a");
+        assertThrows(KenbotException.class, () -> tasks.tag("1 fun bad|tag"));
+        assertEquals("Here are the tasks in your list:\n1.[T][ ] a", tasks.describe());
+    }
+
+    @Test
+    public void untag_tagThatIsThere_removesIt() throws KenbotException {
+        TaskList tasks = listOf("a");
+        tasks.tag("1 fun work");
+        assertEquals("[T][ ] a #work", tasks.untag("1 fun").toString());
+    }
+
+    @Test
+    public void untag_tagThatIsNotThere_throws() {
+        assertThrows(KenbotException.class, () -> listOf("a").untag("1 fun"));
+    }
+
+    @Test
+    public void find_hashKeyword_searchesTagsNotDescriptions() throws KenbotException {
+        TaskList tasks = listOf("read book", "buy milk");
+        tasks.tag("2 fun");
+        assertEquals("Here are the matching tasks in your list:\n1.[T][ ] buy milk #fun",
+                tasks.find("#fun"));
+    }
+
+    @Test
+    public void find_hashKeywordPartOfATag_stillMatches() throws KenbotException {
+        TaskList tasks = listOf("a");
+        tasks.tag("1 cs2103");
+        assertTrue(tasks.find("#cs").contains("#cs2103"));
+    }
+
+    @Test
+    public void find_hashKeywordInADifferentCase_stillMatches() throws KenbotException {
+        // Two tags differing only in case are different tags, but searching
+        // ignores case so that find behaves the same way for tags as for
+        // descriptions.
+        TaskList tasks = listOf("a");
+        tasks.tag("1 fun");
+        assertTrue(tasks.find("#FUN").contains("#fun"));
+    }
+
+    @Test
+    public void find_plainKeywordMatchingATag_doesNotMatch() throws KenbotException {
+        TaskList tasks = listOf("read book");
+        tasks.tag("1 fun");
+        assertEquals("No tasks match 'fun'.", tasks.find("fun"));
+    }
+
+    @Test
+    public void find_hashAlone_throws() {
+        assertThrows(KenbotException.class, () -> listOf("a").find("#"));
+    }
 }
