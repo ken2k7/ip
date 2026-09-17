@@ -5,9 +5,13 @@ and the same commands work in a terminal too. It remembers your tasks between
 runs by saving them to a text file, so you can close it and pick up where you
 left off.
 
-It handles three kinds of task — plain to-dos, deadlines with a due date, and
-events that run between two dates — and it can mark them done, delete them, and
-list them back to you.
+It handles three kinds of task: plain to-dos, deadlines with a due date, and
+events that run between two dates. You can mark them done, delete them, search
+them by keyword, and label them with tags like `#cs2103` so related tasks can be
+pulled up together.
+
+**[Read the user guide](https://ken2k7.github.io/ip/)** for every command, with
+worked examples of each.
 
 ```
  _  __          _           _
