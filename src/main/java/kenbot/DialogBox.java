@@ -57,6 +57,12 @@ public class DialogBox extends HBox {
         assert dialog != null && displayPicture != null
                 : "DialogBox.fxml did not fill in its controls";
 
+        // Bound rather than set once: the window can be resized at any time, so
+        // a fixed width would either waste space when the window grows or clip
+        // when it shrinks. Six tenths keeps a long message readable instead of
+        // letting one line run the full width of a large screen.
+        dialog.maxWidthProperty().bind(this.widthProperty().multiply(0.6));
+
         dialog.setText(text);
         displayPicture.setImage(img);
     }

@@ -34,6 +34,12 @@ public class Main extends Application {
             stage.setTitle("Kenbot");
             stage.setScene(new Scene(root));
 
+            // Floors rather than fixed sizes: the window is free to grow, but
+            // cannot be dragged smaller than the input row and a usable slice
+            // of the conversation.
+            stage.setMinWidth(417.0);
+            stage.setMinHeight(220.0);
+
             // The controller is created by the loader, so the only way to hand
             // it the chatbot is to ask for it once loading is done.
             fxmlLoader.<MainWindow>getController().setKenbot(kenbot);
