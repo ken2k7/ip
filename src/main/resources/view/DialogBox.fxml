@@ -14,15 +14,24 @@
 <fx:root alignment="TOP_RIGHT"
          maxHeight="1.7976931348623157E308"
          maxWidth="1.7976931348623157E308"
-         spacing="10.0"
+         spacing="9.0"
+         styleClass="dialog-box"
+         stylesheets="@../css/dialog-box.css"
          type="javafx.scene.layout.HBox"
          xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
   <children>
-    <Label fx:id="dialog" text="Label" wrapText="true" minHeight="-Infinity" />
-    <ImageView fx:id="displayPicture" fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true" />
+    <!-- The kind of bubble (user / reply / error) is added as a second style
+         class in DialogBox, since only the code knows which this is. -->
+    <Label fx:id="dialog" text="Label" wrapText="true" minHeight="-Infinity"
+           styleClass="bubble" />
+    <!-- preserveRatio is off so the picture is exactly square and the circular
+         clip in DialogBox lands on its edges; the source images are 256x254,
+         so nothing visibly stretches. -->
+    <ImageView fx:id="displayPicture" fitHeight="40.0" fitWidth="40.0"
+               pickOnBounds="true" preserveRatio="false" styleClass="avatar" />
   </children>
   <padding>
-    <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
+    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
   </padding>
 </fx:root>
