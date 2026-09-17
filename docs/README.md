@@ -28,12 +28,17 @@ it. You never need to make that folder yourself.
 
 * **Send a message** either by pressing Enter or by clicking **Send**. Both do
   the same thing.
-* **Your messages appear on the right**, with your picture beside them.
-  Kenbot's replies appear on the left, so the two are easy to tell apart.
+* **Your messages appear on the right** in blue, and Kenbot's replies on the
+  left in white beside its picture. The two sides look different on purpose:
+  your side is an echo of what you typed, Kenbot's is the part worth reading.
 * **The conversation scrolls itself**, so the newest message is always the one
   you can see.
 * **Mistakes are answered, not crashes.** If a command cannot be carried out,
-  Kenbot replies with what went wrong and waits for the next one.
+  Kenbot replies with what went wrong and waits for the next one. A refusal is
+  shown in red with an outline, so you can tell at a glance whether a command
+  worked without having to read the reply.
+* **Resize the window to suit you.** The conversation grows with it, so a wider
+  window shows more of each message rather than more empty space.
 
 ### Running it in a terminal instead
 
@@ -298,6 +303,7 @@ immediately, so nothing is lost even if you close Kenbot without typing `bye`.
   some lines, it loads the ones it can and tells you how many it skipped. In a
   terminal it says so as it starts; the window leaves the count in the terminal
   it was launched from.
-* **The window cannot be resized.** It is a fixed 400 by 600 pixels.
+* **The window can be resized**, down to 417 by 220 pixels and up to whatever
+  your screen allows.
 * **Long descriptions wrap** onto as many lines as they need, so nothing is cut
   off.

@@ -24,6 +24,7 @@ public class Kenbot {
     private final TaskList tasks;
     private final Ui ui;
     private boolean isExit = false;
+    private boolean isLastResponseError = false;
 
     /**
      * Creates a chatbot that keeps its tasks in the given file.
@@ -127,14 +128,34 @@ public class Kenbot {
      */
     public String getResponse(String input) {
         if (input.isBlank()) {
+            isLastResponseError = true;
             return "Say something and I'll do my best.";
         }
 
         try {
-            return respondTo(Parser.parse(input.trim()));
+            String message = respondTo(Parser.parse(input.trim()));
+            isLastResponseError = false;
+            return message;
         } catch (KenbotException e) {
+            isLastResponseError = true;
             return e.getMessage();
         }
+    }
+
+    /**
+     * Returns whether the last reply was a refusal rather than a result.
+     *
+     * <p>The console shows both the same way, but a window can tell them apart
+     * visually, and only this class knows which it produced: by the time the
+     * caller has the reply it is just a string. Recorded here rather than
+     * returned alongside the text so that the console front end, which does not
+     * care, is not made to handle a value it would ignore.</p>
+     *
+     * @return true if the last call to {@link #getResponse(String)} reported a
+     *         problem instead of carrying a command out
+     */
+    public boolean isLastResponseError() {
+        return isLastResponseError;
     }
 
     /**

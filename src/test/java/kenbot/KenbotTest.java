@@ -86,4 +86,53 @@ public class KenbotTest {
     public void getGreeting_always_introducesKenbot() {
         assertTrue(kenbotIn(folder).getGreeting().contains("Kenbot"));
     }
+
+    @Test
+    public void isLastResponseError_beforeAnyCommand_isFalse() {
+        assertFalse(kenbotIn(folder).isLastResponseError());
+    }
+
+    @Test
+    public void isLastResponseError_afterACommandThatWorked_isFalse() {
+        Kenbot kenbot = kenbotIn(folder);
+        kenbot.getResponse("todo read book");
+        assertFalse(kenbot.isLastResponseError());
+    }
+
+    @Test
+    public void isLastResponseError_afterAnUnknownCommand_isTrue() {
+        Kenbot kenbot = kenbotIn(folder);
+        kenbot.getResponse("nonsense");
+        assertTrue(kenbot.isLastResponseError());
+    }
+
+    @Test
+    public void isLastResponseError_afterARefusedArgument_isTrue() {
+        Kenbot kenbot = kenbotIn(folder);
+        kenbot.getResponse("mark 99");
+        assertTrue(kenbot.isLastResponseError());
+    }
+
+    @Test
+    public void isLastResponseError_afterBlankInput_isTrue() {
+        Kenbot kenbot = kenbotIn(folder);
+        kenbot.getResponse("   ");
+        assertTrue(kenbot.isLastResponseError());
+    }
+
+    @Test
+    public void isLastResponseError_errorThenSuccess_clearsTheFlag() {
+        Kenbot kenbot = kenbotIn(folder);
+        kenbot.getResponse("nonsense");
+        kenbot.getResponse("todo read book");
+        assertFalse(kenbot.isLastResponseError(), "a later good command must clear the flag");
+    }
+
+    @Test
+    public void isLastResponseError_successThenError_setsTheFlag() {
+        Kenbot kenbot = kenbotIn(folder);
+        kenbot.getResponse("todo read book");
+        kenbot.getResponse("delete 99");
+        assertTrue(kenbot.isLastResponseError());
+    }
 }
