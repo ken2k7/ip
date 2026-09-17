@@ -1057,6 +1057,271 @@ Peace! See you soon!
 ____________________________________________________________
 ```
 
+## TC32 - Add a task with tags
+
+**Aim:** Check that trailing `#` words become tags rather than part of the
+description, that several can be given at once, and that they are shown after
+the description in the order they were typed.
+
+**Input:**
+
+```text
+todo read book #fun #cs2103
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book #fun #cs2103
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC33 - Keep a hash in the middle of a description
+
+**Aim:** Only a run of `#` words at the *end* of the line is tags. A `#` word
+with ordinary words after it is part of what the user is describing, so it must
+survive into the description untouched.
+
+**Input:**
+
+```text
+todo read #1 book
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read #1 book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC34 - Tag a deadline after its date
+
+**Aim:** Tags are taken off before `/by` is looked for, so a tag written after
+the date must not be swallowed into the date.
+
+**Input:**
+
+```text
+deadline return book /by 2019-10-15 #urgent
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Oct 15 2019) #urgent
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC35 - Tag and untag an existing task
+
+**Aim:** Check that `tag` adds to a task already in the list, that a leading
+`#` is optional, and that `untag` takes one back off again.
+
+**Input:**
+
+```text
+todo read book
+tag 1 #fun
+untag 1 fun
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Tagged it:
+  [T][ ] read book #fun
+____________________________________________________________
+____________________________________________________________
+Removed that:
+  [T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC36 - Find by tag
+
+**Aim:** A keyword starting with `#` searches tags instead of descriptions, and
+part of a tag counts, the same way part of a description does.
+
+**Input:**
+
+```text
+todo read book #cs2103
+todo buy milk
+find #cs
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book #cs2103
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] buy milk
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read book #cs2103
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC37 - A plain keyword does not match a tag
+
+**Aim:** The `#` is what chooses which field is searched. Without it, a word
+that happens to be a tag must not match, or the two kinds of search would blur
+into one.
+
+**Input:**
+
+```text
+todo read book #fun
+find fun
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book #fun
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+No tasks match 'fun'.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC38 - Reject a tag with no name
+
+**Aim:** A bare `#` names nothing, so it should be reported rather than stored
+as a tag with an empty name.
+
+**Input:**
+
+```text
+todo read book
+tag 1 #
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+A tag needs a name after the '#', like: #fun
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC39 - Reject tag with no tag given
+
+**Aim:** `tag 1` says which task but not what to tag it with, so it should ask
+and show the expected form.
+
+**Input:**
+
+```text
+todo read book
+tag 1
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Tell me which task to tag and with what, like: tag 2 fun
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC40 - Reject untag for a tag the task does not have
+
+**Aim:** Removing a tag that is not there changes nothing, and a command that
+appears to work while doing nothing is worse than one that explains itself.
+
+**Input:**
+
+```text
+todo read book
+untag 1 fun
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+That task doesn't have any of those tags.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
 ## Not yet covered
 
 Behaviour that this plan cannot check, or does not check yet:
@@ -1087,3 +1352,7 @@ test case for behaviour that was chosen on purpose:
 * **A blank line.** It is ignored and the program carries on waiting.
 * **Marking a task that is already done.** Harmless, so it is allowed rather
   than reported.
+* **Searching for a tag in a different case**, such as `find #FUN` matching
+  `#fun`. Two tags differing only in case are genuinely different tags, but
+  searching ignores case so that `find` behaves the same way whether the
+  keyword is a tag or a description.

@@ -22,30 +22,26 @@ public class Todo extends Task {
      * @throws KenbotException if the description is missing or blank
      */
     public static Todo of(String argument) throws KenbotException {
-        if (argument.isBlank()) {
+        // Tags come off first, so the checks below judge the description alone
+        // and never mistake a trailing tag for one.
+        Tag.TaggedText split = Tag.splitTrailingTags(argument);
+        if (split.text().isBlank()) {
             throw new KenbotException("A todo needs a description, like:\n"
                     + "  todo read book");
         }
-        return new Todo(argument.trim());
+
+        Todo todo = new Todo(split.text().trim());
+        split.tags().forEach(todo::addTag);
+        return todo;
     }
 
     /**
-     * Returns this to-do as it should be shown on screen.
+     * Returns the letter a to-do is saved under.
      *
-     * @return {@code [T]} followed by the shared task text
+     * @return {@code "T"}
      */
     @Override
-    public String toString() {
-        return "[T]" + super.toString();
-    }
-
-    /**
-     * Returns this to-do as {@code T | done | description}.
-     *
-     * @return the save-file line for this to-do
-     */
-    @Override
-    public String toStorable() {
-        return "T | " + super.toStorable();
+    protected String getTypeCode() {
+        return "T";
     }
 }

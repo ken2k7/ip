@@ -25,34 +25,49 @@ public class Deadline extends Task {
      * @throws KenbotException if either part is missing or blank
      */
     public static Deadline of(String argument) throws KenbotException {
-        String[] parts = argument.split(" /by ", 2);
+        // Tags come off before /by is looked for, so this method never has to
+        // know that a date might be followed by a tag.
+        Tag.TaggedText split = Tag.splitTrailingTags(argument);
+        String[] parts = split.text().split(" /by ", 2);
         if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
             throw new KenbotException(
                     "A deadline needs a description and a /by part, like:\n"
                     + "  deadline return book /by 2019-10-15");
         }
-        return new Deadline(parts[0].trim(), TaskDate.of(parts[1]));
+        Deadline deadline = new Deadline(parts[0].trim(), TaskDate.of(parts[1]));
+        split.tags().forEach(deadline::addTag);
+        return deadline;
     }
 
     /**
-     * Returns this deadline as it should be shown on screen.
+     * Returns the letter a deadline is saved under.
      *
-     * @return {@code [D]} followed by the shared task text and the due date
+     * @return {@code "D"}
      */
     @Override
-    public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+    protected String getTypeCode() {
+        return "D";
     }
 
     /**
-     * Returns this deadline as {@code D | done | description | by}.
+     * Returns the due date as it is shown on screen.
      *
-     * @return the save-file line for this deadline
+     * @return {@code (by: ...)}, with a leading space
      */
     @Override
-    public String toStorable() {
+    protected String getDisplayDetails() {
+        return " (by: " + by + ")";
+    }
+
+    /**
+     * Returns the due date as the save file holds it.
+     *
+     * @return the one field a deadline adds after its description
+     */
+    @Override
+    protected String getStorableDetails() {
         // by.toStorable() rather than by on its own: a plain + would use
         // toString(), whose display format cannot be read back in.
-        return "D | " + super.toStorable() + " | " + by.toStorable();
+        return by.toStorable();
     }
 }

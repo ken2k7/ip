@@ -58,7 +58,13 @@ them freely and your tasks follow you.
 | `unmark NUMBER` | marks a task not done |
 | `delete NUMBER` | removes a task |
 | `find KEYWORD` | shows tasks whose description contains the keyword |
+| `find #TAG` | shows tasks carrying that tag |
+| `tag NUMBER TAG...` | adds one or more tags to a task |
+| `untag NUMBER TAG...` | removes one or more tags from a task |
 | `bye` | exits |
+
+Any of the three commands that add a task also accepts tags at the end of the
+line, so `todo read book #fun` works without a separate `tag` command.
 
 ## How to write dates
 
@@ -185,10 +191,64 @@ ____________________________________________________________
 The remaining tasks are renumbered straight away, so `list` always runs from 1
 with no gaps.
 
+## Tagging a task
+
+A tag is a short label such as `#fun` or `#cs2103`. A task can carry any number
+of them, and they are shown at the end of its line.
+
+The quickest way is to put them at the end when you create the task:
+
+Example: `todo read book #fun #cs2103`
+
+```
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book #fun #cs2103
+Now you have 1 tasks in the list.
+____________________________________________________________
+```
+
+This works for deadlines and events too — put the tags after the dates:
+`deadline return book /by 2019-10-15 #urgent`.
+
+Only `#` words at the **end** of the line become tags. A `#` with ordinary words
+after it stays in the description, so `todo read #1 book` gives you a task
+described as "read #1 book" with no tags.
+
+To tag a task you have already added, use `tag` with its number. The `#` is
+optional here, and you can give several at once:
+
+Example: `tag 1 fun cs2103`
+
+```
+____________________________________________________________
+Tagged it:
+  [T][ ] read book #fun #cs2103
+____________________________________________________________
+```
+
+`untag` takes them back off again:
+
+Example: `untag 1 fun`
+
+```
+____________________________________________________________
+Removed that:
+  [T][ ] read book #cs2103
+____________________________________________________________
+```
+
+A tag is one word with no spaces, and cannot contain `|`. Capitals count:
+`#Fun` and `#fun` are two different tags.
+
 ## Finding tasks
 
 Searches the descriptions. Upper and lower case are ignored, and part of a word
 counts — `find book` also finds "bookshop".
+
+Start the keyword with `#` to search **tags** instead: `find #cs` finds anything
+tagged `#cs2103`. The `#` is what chooses which one is searched, so `find fun`
+will not find a task tagged `#fun` — you need `find #fun`.
 
 Example: `find book`
 
@@ -231,6 +291,9 @@ immediately, so nothing is lost even if you close Kenbot without typing `bye`.
   fields in its save file, so a task containing one is refused when you type it.
 * **The numbers `find` shows start from 1** and are not the numbers to use with
   `mark` or `delete`. Run `list` first if you need the real number.
+* **Tags are optional everywhere.** A task without any is stored and shown
+  exactly as it was before tags existed, so a save file from an older Kenbot
+  still opens and nothing needs converting.
 * **A damaged save file does not lose everything.** If Kenbot cannot understand
   some lines, it loads the ones it can and tells you how many it skipped. In a
   terminal it says so as it starts; the window leaves the count in the terminal

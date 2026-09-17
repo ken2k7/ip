@@ -14,6 +14,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import kenbot.task.Deadline;
 import kenbot.task.Event;
+import kenbot.task.Tag;
 import kenbot.task.TaskDate;
 import kenbot.task.Todo;
 
@@ -140,5 +141,114 @@ public class StorageTest {
         Files.createDirectories(file);
 
         assertThrows(KenbotException.class, () -> storageIn(folder).load());
+    }
+
+    @Test
+    public void save_taskWithNoTags_writesTheSameLineAsBeforeTagsExisted() throws Exception {
+        TaskList tasks = new TaskList();
+        tasks.add(new Todo("read book"));
+        storageIn(folder).save(tasks);
+
+        assertEquals(List.of("T | 0 | read book"),
+                Files.readAllLines(folder.resolve("data").resolve("tasks.txt")));
+    }
+
+    @Test
+    public void save_taskWithTags_putsThemInOneTrailingField() throws Exception {
+        TaskList tasks = new TaskList();
+        Todo todo = new Todo("read book");
+        todo.addTag(Tag.of("fun"));
+        todo.addTag(Tag.of("cs2103"));
+        tasks.add(todo);
+        storageIn(folder).save(tasks);
+
+        assertEquals(List.of("T | 0 | read book | fun cs2103"),
+                Files.readAllLines(folder.resolve("data").resolve("tasks.txt")));
+    }
+
+    @Test
+    public void save_deadlineWithTags_putsTagsAfterTheDate() throws Exception {
+        TaskList tasks = new TaskList();
+        Deadline deadline = new Deadline("submit", TaskDate.of("2019-10-15"));
+        deadline.addTag(Tag.of("urgent"));
+        tasks.add(deadline);
+        storageIn(folder).save(tasks);
+
+        assertEquals(List.of("D | 0 | submit | 2019-10-15 | urgent"),
+                Files.readAllLines(folder.resolve("data").resolve("tasks.txt")));
+    }
+
+    @Test
+    public void load_savedTags_comeBack() throws Exception {
+        Path file = folder.resolve("data").resolve("tasks.txt");
+        Files.createDirectories(file.getParent());
+        Files.write(file, List.of("E | 1 | meeting | 2019-10-15 1400 | 2019-10-15 1600 | work fun"));
+
+        Storage.LoadResult result = storageIn(folder).load();
+
+        assertEquals(0, result.skippedLines());
+        assertEquals("[E][X] meeting (from: Oct 15 2019 1400 to: Oct 15 2019 1600) #work #fun",
+                result.tasks().get(0).toString());
+    }
+
+    /**
+     * A save file written before tagging existed has no tag field at all. Every
+     * line of it must still load, or upgrading would silently lose the user's
+     * tasks.
+     */
+    @Test
+    public void load_fileInTheFormatUsedBeforeTags_loadsEveryLine() throws Exception {
+        Path file = folder.resolve("data").resolve("tasks.txt");
+        Files.createDirectories(file.getParent());
+        Files.write(file, List.of(
+                "T | 0 | buy milk",
+                "T | 1 | finish iP",
+                "D | 0 | return book | 2019-10-15",
+                "E | 0 | meeting | 2019-10-15 1400 | 2019-10-15 1600"));
+
+        Storage.LoadResult result = storageIn(folder).load();
+
+        assertEquals(0, result.skippedLines());
+        assertEquals(4, result.tasks().size());
+        assertTrue(result.tasks().stream().allMatch(task -> task.getTags().isEmpty()));
+    }
+
+    /**
+     * A line ending in a bare separator loses nothing: {@code String.split}
+     * drops a trailing empty field, so the line reads as an ordinary untagged
+     * task rather than as a broken one. Keeping the task is the better outcome
+     * of the two, so this records the behaviour rather than guarding against it.
+     */
+    @Test
+    public void load_lineEndingInASeparator_readsAsUntagged() throws Exception {
+        Path file = folder.resolve("data").resolve("tasks.txt");
+        Files.createDirectories(file.getParent());
+        Files.write(file, List.of("T | 0 | read book | "));
+
+        Storage.LoadResult result = storageIn(folder).load();
+
+        assertEquals(0, result.skippedLines());
+        assertTrue(result.tasks().get(0).getTags().isEmpty());
+    }
+
+    @Test
+    public void load_lineWithABlankTagField_isSkippedRatherThanCrashing() throws Exception {
+        Path file = folder.resolve("data").resolve("tasks.txt");
+        Files.createDirectories(file.getParent());
+        Files.write(file, List.of("T | 0 | read book |  ", "T | 0 | buy milk"));
+
+        Storage.LoadResult result = storageIn(folder).load();
+
+        assertEquals(1, result.skippedLines());
+        assertEquals(1, result.tasks().size());
+    }
+
+    @Test
+    public void load_lineWithTooManyFields_isSkipped() throws Exception {
+        Path file = folder.resolve("data").resolve("tasks.txt");
+        Files.createDirectories(file.getParent());
+        Files.write(file, List.of("T | 0 | read book | fun | extra"));
+
+        assertEquals(1, storageIn(folder).load().skippedLines());
     }
 }
