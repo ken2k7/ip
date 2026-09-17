@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 
 /**
  * One line of the conversation: a message beside the picture of whoever said it.
@@ -30,7 +31,7 @@ public class DialogBox extends HBox {
     @FXML
     private ImageView displayPicture;
 
-    private DialogBox(String text, Image img) {
+    private DialogBox(String text, Image img, String bubbleStyle) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             // Both must be set before load(): afterwards the loader has already
@@ -63,19 +64,34 @@ public class DialogBox extends HBox {
         // letting one line run the full width of a large screen.
         dialog.maxWidthProperty().bind(this.widthProperty().multiply(0.6));
 
+        dialog.getStyleClass().add(bubbleStyle);
         dialog.setText(text);
-        displayPicture.setImage(img);
+
+        if (img == null) {
+            // The user's own side carries no picture: they know who they are,
+            // and the space is better spent on the reply. Removed rather than
+            // hidden so it takes up no room at all.
+            this.getChildren().remove(displayPicture);
+        } else {
+            displayPicture.setImage(img);
+            // A circle the size of the picture, centred on it. Done here
+            // because JavaFX CSS cannot clip a node to a shape.
+            double radius = displayPicture.getFitWidth() / 2;
+            displayPicture.setClip(new Circle(radius, radius, radius));
+        }
     }
 
     /**
      * Creates a dialog box for something the user said.
      *
+     * <p>No picture: the user knows who they are, so the space it would take is
+     * given to the reply instead.</p>
+     *
      * @param text what the user typed
-     * @param img the user's picture
      * @return a dialog box aligned to the right
      */
-    public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+    public static DialogBox getUserDialog(String text) {
+        return new DialogBox(text, null, "user-bubble");
     }
 
     /**
@@ -86,7 +102,25 @@ public class DialogBox extends HBox {
      * @return a dialog box aligned to the left, mirroring the user's
      */
     public static DialogBox getKenbotDialog(String text, Image img) {
-        DialogBox box = new DialogBox(text, img);
+        DialogBox box = new DialogBox(text, img, "reply-bubble");
+        box.flip();
+        return box;
+    }
+
+    /**
+     * Creates a dialog box for a command Kenbot refused.
+     *
+     * <p>Shown differently from an ordinary reply because the two mean opposite
+     * things: one says a command was carried out, the other that it was not.
+     * Presenting them identically leaves the user to read carefully to find out
+     * which happened.</p>
+     *
+     * @param text the reason the command could not be used
+     * @param img Kenbot's picture
+     * @return a dialog box aligned to the left, styled as a problem
+     */
+    public static DialogBox getErrorDialog(String text, Image img) {
+        DialogBox box = new DialogBox(text, img, "error-bubble");
         box.flip();
         return box;
     }

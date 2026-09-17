@@ -81,8 +81,10 @@ public class MainWindow extends AnchorPane {
         String response = kenbot.getResponse(input);
 
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getKenbotDialog(response, kenbotImage));
+                DialogBox.getUserDialog(input),
+                kenbot.isLastResponseError()
+                        ? DialogBox.getErrorDialog(response, kenbotImage)
+                        : DialogBox.getKenbotDialog(response, kenbotImage));
 
         userInput.clear();
 
