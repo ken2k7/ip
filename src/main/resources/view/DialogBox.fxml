@@ -5,16 +5,22 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 
+<!--
+  No prefWidth: the box takes whatever width the ScrollPane gives it, so the
+  message hugs the right edge (or the left, once flipped) at any window size.
+  The label's own maximum is bound in DialogBox, so long messages wrap instead
+  of stretching across the whole screen.
+-->
 <fx:root alignment="TOP_RIGHT"
          maxHeight="1.7976931348623157E308"
          maxWidth="1.7976931348623157E308"
-         prefWidth="400.0"
+         spacing="10.0"
          type="javafx.scene.layout.HBox"
          xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <Label fx:id="dialog" text="Label" wrapText="true" minHeight="-Infinity" />
-    <ImageView fx:id="displayPicture" fitHeight="99.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="displayPicture" fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true" />
   </children>
   <padding>
     <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
