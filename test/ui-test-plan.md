@@ -49,8 +49,8 @@ ____________________________________________________________
 |_|\_\___|_| |_|_.__/ \___/ \__|
 
                  Kenbot
-Yo! I'm Kenbot
-How may I help you today?
+Yo, I'm Kenbot.
+What are we getting done today?
 ____________________________________________________________
 
 ```
@@ -90,9 +90,9 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -115,9 +115,9 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [D][ ] return book (by: Jun 06 2019)
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -140,9 +140,9 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -169,22 +169,22 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [D][ ] return book (by: Jun 06 2019)
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
-Now you have 3 tasks in the list.
+That makes 3 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 2.[D][ ] return book (by: Jun 06 2019)
 3.[E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
@@ -214,24 +214,24 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Nice, that's done:
   [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][X] read book
 ____________________________________________________________
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+Alright, back on the list:
   [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -255,7 +255,7 @@ bye
 
 ```text
 ____________________________________________________________
-A deadline needs a description and a /by part, like:
+Deadlines need a description and a /by. Like:
   deadline return book /by 2019-10-15
 ____________________________________________________________
 ____________________________________________________________
@@ -279,7 +279,7 @@ bye
 
 ```text
 ____________________________________________________________
-An event needs a description, a /from and a /to, like:
+Events need a description, a /from and a /to. Like:
   event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600
 ____________________________________________________________
 ____________________________________________________________
@@ -305,11 +305,11 @@ bye
 
 ```text
 ____________________________________________________________
-A todo needs a description, like:
+Need a description for that. Like:
   todo read book
 ____________________________________________________________
 ____________________________________________________________
-You have no tasks yet.
+Nothing on the list yet.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -333,10 +333,10 @@ bye
 
 ```text
 ____________________________________________________________
-I don't know what that means.
+Don't know that one.
 ____________________________________________________________
 ____________________________________________________________
-You have no tasks yet.
+Nothing on the list yet.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -359,7 +359,7 @@ bye
 
 ```text
 ____________________________________________________________
-You have no tasks yet.
+Nothing on the list yet.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -384,15 +384,15 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Tell me which task to mark, like: mark 2
+Which task to mark? Like: mark 2
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -418,15 +418,15 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-'abc' is not a task number.
+'abc' isn't a task number.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -452,15 +452,15 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-There is no task 5. You have 1 task(s).
+There's no task 5. You've got 1.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -485,12 +485,12 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-There is no task 0. You have 1 task(s).
+There's no task 0. You've got 1.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -513,7 +513,7 @@ bye
 
 ```text
 ____________________________________________________________
-There is no task 1. Your list is empty.
+There's no task 1, the list is empty.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -537,12 +537,12 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Tell me which task to unmark, like: unmark 2
+Which task to unmark? Like: unmark 2
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -573,32 +573,32 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [D][ ] return book (by: Jun 06 2019)
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-There is no task 99. You have 2 task(s).
+There's no task 99. You've got 2.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 2.[D][ ] return book (by: Jun 06 2019)
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Nice, that's done:
   [D][X] return book (by: Jun 06 2019)
 ____________________________________________________________
 ____________________________________________________________
-I don't know what that means.
+Don't know that one.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 2.[D][X] return book (by: Jun 06 2019)
 ____________________________________________________________
@@ -622,9 +622,9 @@ todo read book
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ```
 
@@ -649,27 +649,27 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [D][ ] return book (by: Jun 06 2019)
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
-Now you have 3 tasks in the list.
+That makes 3 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Gone:
   [D][ ] return book (by: Jun 06 2019)
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 2.[E][ ] project meeting (from: Aug 06 2019 1400 to: Aug 06 2019 1600)
 ____________________________________________________________
@@ -697,22 +697,22 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] join sports club
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Gone:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] join sports club
 ____________________________________________________________
 ____________________________________________________________
@@ -738,17 +738,17 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Gone:
   [T][ ] read book
-Now you have 0 tasks in the list.
+That makes 0 tasks.
 ____________________________________________________________
 ____________________________________________________________
-You have no tasks yet.
+Nothing on the list yet.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -773,15 +773,15 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Tell me which task to delete, like: delete 2
+Which task to delete? Like: delete 2
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -808,18 +808,18 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-There is no task 99. You have 1 task(s).
+There's no task 99. You've got 1.
 ____________________________________________________________
 ____________________________________________________________
-'abc' is not a task number.
+'abc' isn't a task number.
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -843,7 +843,7 @@ bye
 
 ```text
 ____________________________________________________________
-There is no task 1. Your list is empty.
+There's no task 1, the list is empty.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -872,31 +872,31 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] join sports club
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Gone:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] borrow book
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+Nice, that's done:
   [T][X] borrow book
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] join sports club
 2.[T][X] borrow book
 ____________________________________________________________
@@ -924,10 +924,10 @@ bye
 
 ```text
 ____________________________________________________________
-Sorry, a task can't contain the '|' character - I use it to separate fields in my save file.
+Can't use '|' in a task, that's what splits the fields in my save file.
 ____________________________________________________________
 ____________________________________________________________
-You have no tasks yet.
+Nothing on the list yet.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -952,10 +952,10 @@ bye
 
 ```text
 ____________________________________________________________
-'Sunday' is not a date I understand. Write it as yyyy-mm-dd, like: 2019-10-15 1800
+'Sunday' isn't a date I can read. Write it as yyyy-mm-dd, like: 2019-10-15 1800
 ____________________________________________________________
 ____________________________________________________________
-You have no tasks yet.
+Nothing on the list yet.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -981,22 +981,22 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [D][ ] return book (by: Jun 06 2019)
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] join sports club
-Now you have 3 tasks in the list.
+That makes 3 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+Found these:
 1.[T][ ] read book
 2.[D][ ] return book (by: Jun 06 2019)
 ____________________________________________________________
@@ -1022,12 +1022,12 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-No tasks match 'xyz'.
+Nothing matches 'xyz'.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1050,7 +1050,7 @@ bye
 
 ```text
 ____________________________________________________________
-Tell me what to look for, like: find book
+What am I looking for? Like: find book
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1074,9 +1074,9 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book #fun #cs2103
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1100,9 +1100,9 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read #1 book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1125,9 +1125,9 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [D][ ] return book (by: Oct 15 2019) #urgent
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1152,16 +1152,16 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Tagged it:
+Tagged:
   [T][ ] read book #fun
 ____________________________________________________________
 ____________________________________________________________
-Removed that:
+Untagged:
   [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -1187,17 +1187,17 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book #cs2103
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] buy milk
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+Found these:
 1.[T][ ] read book #cs2103
 ____________________________________________________________
 ____________________________________________________________
@@ -1223,12 +1223,12 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book #fun
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-No tasks match 'fun'.
+Nothing matches 'fun'.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1252,12 +1252,12 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-A tag needs a name after the '#', like: #fun
+Need a name after the '#', like: #fun
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1281,12 +1281,12 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-Tell me which task to tag and with what, like: tag 2 fun
+Which task to tag, and with what? Like: tag 2 fun
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!
@@ -1310,12 +1310,12 @@ bye
 
 ```text
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ____________________________________________________________
-That task doesn't have any of those tags.
+It doesn't have those.
 ____________________________________________________________
 ____________________________________________________________
 Peace! See you soon!

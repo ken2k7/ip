@@ -42,8 +42,8 @@ public class Parser {
         // bar reaches the file, its line can no longer be split back into the
         // right fields, and the task would silently come back incomplete.
         if (input.contains("|")) {
-            throw new KenbotException("Sorry, a task can't contain the '|' character"
-                    + " - I use it to separate fields in my save file.");
+            throw new KenbotException("Can't use '|' in a task, that's what"
+                    + " splits the fields in my save file.");
         }
 
         // A limit of 2 keeps the rest of the line in one piece, so a

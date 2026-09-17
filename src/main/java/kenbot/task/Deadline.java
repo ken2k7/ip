@@ -31,7 +31,7 @@ public class Deadline extends Task {
         String[] parts = split.text().split(" /by ", 2);
         if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
             throw new KenbotException(
-                    "A deadline needs a description and a /by part, like:\n"
+                    "Deadlines need a description and a /by. Like:\n"
                     + "  deadline return book /by 2019-10-15");
         }
         Deadline deadline = new Deadline(parts[0].trim(), TaskDate.of(parts[1]));

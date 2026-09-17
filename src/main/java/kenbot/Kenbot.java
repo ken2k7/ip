@@ -82,8 +82,8 @@ public class Kenbot {
         try {
             Storage.LoadResult result = storage.load();
             if (result.skippedLines() > 0) {
-                ui.show("I couldn't understand " + result.skippedLines()
-                        + " line(s) in your save file, so I've left them out.");
+                ui.show("Couldn't read " + result.skippedLines()
+                        + " line(s) from your save file, so I skipped them.");
             }
             return new TaskList(result.tasks());
         } catch (KenbotException e) {
@@ -129,7 +129,7 @@ public class Kenbot {
     public String getResponse(String input) {
         if (input.isBlank()) {
             isLastResponseError = true;
-            return "Say something and I'll do my best.";
+            return "Type something and I'll sort it.";
         }
 
         try {
@@ -227,7 +227,7 @@ public class Kenbot {
      * @throws KenbotException if the number is missing, not a number, or out of range
      */
     private String markTask(String argument) throws KenbotException {
-        return "Nice! I've marked this task as done:\n  " + tasks.mark(argument);
+        return "Nice, that's done:\n  " + tasks.mark(argument);
     }
 
     /**
@@ -238,7 +238,7 @@ public class Kenbot {
      * @throws KenbotException if the number is missing, not a number, or out of range
      */
     private String unmarkTask(String argument) throws KenbotException {
-        return "OK, I've marked this task as not done yet:\n  " + tasks.unmark(argument);
+        return "Alright, back on the list:\n  " + tasks.unmark(argument);
     }
 
     /**
@@ -249,7 +249,7 @@ public class Kenbot {
      * @throws KenbotException if the number or any of the tags cannot be used
      */
     private String tagTask(String argument) throws KenbotException {
-        return "Tagged it:\n  " + tasks.tag(argument);
+        return "Tagged:\n  " + tasks.tag(argument);
     }
 
     /**
@@ -260,7 +260,7 @@ public class Kenbot {
      * @throws KenbotException if the number or any of the tags cannot be used
      */
     private String untagTask(String argument) throws KenbotException {
-        return "Removed that:\n  " + tasks.untag(argument);
+        return "Untagged:\n  " + tasks.untag(argument);
     }
 
     /**
@@ -271,8 +271,21 @@ public class Kenbot {
      */
     private String addTask(Task task) {
         tasks.add(task);
-        return "Got it. I've added this task:\n  " + task
-                + "\nNow you have " + tasks.size() + " tasks in the list.";
+        return "Got it, that's on the list:\n  " + task + "\n" + describeCount();
+    }
+
+    /**
+     * Returns the running total of tasks.
+     *
+     * <p>Said in one place because both adding and removing report it, and
+     * pluralised because "1 tasks" reads as a bug even though it is only
+     * wording.</p>
+     *
+     * @return the count, as a sentence
+     */
+    private String describeCount() {
+        int count = tasks.size();
+        return "That makes " + count + (count == 1 ? " task." : " tasks.");
     }
 
     /**
@@ -284,7 +297,6 @@ public class Kenbot {
      */
     private String deleteTask(String argument) throws KenbotException {
         Task removed = tasks.delete(argument);
-        return "Noted. I've removed this task:\n  " + removed
-                + "\nNow you have " + tasks.size() + " tasks in the list.";
+        return "Gone:\n  " + removed + "\n" + describeCount();
     }
 }

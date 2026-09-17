@@ -25,12 +25,12 @@ public class TaskListTest {
 
     @Test
     public void describe_emptyList_saysSoInsteadOfShowingNothing() {
-        assertEquals("You have no tasks yet.", new TaskList().describe());
+        assertEquals("Nothing on the list yet.", new TaskList().describe());
     }
 
     @Test
     public void describe_threeTasks_numbersThemFromOne() {
-        assertEquals("Here are the tasks in your list:"
+        assertEquals("Here's what you've got:"
                 + "\n1.[T][ ] a\n2.[T][ ] b\n3.[T][ ] c", listOf("a", "b", "c").describe());
     }
 
@@ -43,7 +43,7 @@ public class TaskListTest {
         TaskList tasks = listOf("a", "b", "c");
         assertEquals("[T][ ] b", tasks.delete("2").toString());
         assertEquals(2, tasks.size());
-        assertEquals("Here are the tasks in your list:\n1.[T][ ] a\n2.[T][ ] c",
+        assertEquals("Here's what you've got:\n1.[T][ ] a\n2.[T][ ] c",
                 tasks.describe());
     }
 
@@ -64,13 +64,13 @@ public class TaskListTest {
     @Test
     public void delete_numberPastTheEnd_throwsAndSaysHowManyThereAre() {
         KenbotException thrown = assertThrows(KenbotException.class, () -> listOf("a").delete("5"));
-        assertEquals("There is no task 5. You have 1 task(s).", thrown.getMessage());
+        assertEquals("There's no task 5. You've got 1.", thrown.getMessage());
     }
 
     @Test
     public void delete_onEmptyList_saysTheListIsEmpty() {
         KenbotException thrown = assertThrows(KenbotException.class, () -> new TaskList().delete("1"));
-        assertEquals("There is no task 1. Your list is empty.", thrown.getMessage());
+        assertEquals("There's no task 1, the list is empty.", thrown.getMessage());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class TaskListTest {
     public void find_keywordInSomeDescriptions_listsOnlyThoseNumberedFromOne()
             throws KenbotException {
         TaskList tasks = listOf("read book", "join club", "return book");
-        assertEquals("Here are the matching tasks in your list:"
+        assertEquals("Found these:"
                 + "\n1.[T][ ] read book\n2.[T][ ] return book", tasks.find("book"));
     }
 
@@ -108,7 +108,7 @@ public class TaskListTest {
 
     @Test
     public void find_nothingMatches_saysSoInsteadOfAnEmptyHeading() throws KenbotException {
-        assertEquals("No tasks match 'xyz'.", listOf("read book").find("xyz"));
+        assertEquals("Nothing matches 'xyz'.", listOf("read book").find("xyz"));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class TaskListTest {
     public void tag_oneBadTagAmongGoodOnes_leavesTheTaskUnchanged() {
         TaskList tasks = listOf("a");
         assertThrows(KenbotException.class, () -> tasks.tag("1 fun bad|tag"));
-        assertEquals("Here are the tasks in your list:\n1.[T][ ] a", tasks.describe());
+        assertEquals("Here's what you've got:\n1.[T][ ] a", tasks.describe());
     }
 
     @Test
@@ -187,7 +187,7 @@ public class TaskListTest {
     public void find_hashKeyword_searchesTagsNotDescriptions() throws KenbotException {
         TaskList tasks = listOf("read book", "buy milk");
         tasks.tag("2 fun");
-        assertEquals("Here are the matching tasks in your list:\n1.[T][ ] buy milk #fun",
+        assertEquals("Found these:\n1.[T][ ] buy milk #fun",
                 tasks.find("#fun"));
     }
 
@@ -212,7 +212,7 @@ public class TaskListTest {
     public void find_plainKeywordMatchingATag_doesNotMatch() throws KenbotException {
         TaskList tasks = listOf("read book");
         tasks.tag("1 fun");
-        assertEquals("No tasks match 'fun'.", tasks.find("fun"));
+        assertEquals("Nothing matches 'fun'.", tasks.find("fun"));
     }
 
     @Test

@@ -29,7 +29,7 @@ public class KenbotTest {
     @Test
     public void getResponse_todo_confirmsTheTask() {
         String reply = kenbotIn(folder).getResponse("todo read book");
-        assertTrue(reply.startsWith("Got it. I've added this task:"), reply);
+        assertTrue(reply.startsWith("Got it, that's on the list:"), reply);
         assertTrue(reply.contains("[T][ ] read book"), reply);
     }
 
@@ -46,13 +46,13 @@ public class KenbotTest {
      */
     @Test
     public void getResponse_unknownCommand_returnsTheMessageInsteadOfThrowing() {
-        assertEquals("I don't know what that means.",
+        assertEquals("Don't know that one.",
                 kenbotIn(folder).getResponse("sing a song"));
     }
 
     @Test
     public void getResponse_blank_asksForACommand() {
-        assertEquals("Say something and I'll do my best.", kenbotIn(folder).getResponse("   "));
+        assertEquals("Type something and I'll sort it.", kenbotIn(folder).getResponse("   "));
     }
 
     @Test

@@ -22,7 +22,7 @@ public class Tag {
 
     /** Shown whenever a tag cannot be made from what the user typed. */
     private static final String USAGE_MESSAGE =
-            "A tag is one word with no spaces, like: #fun";
+            "Tags are one word, no spaces. Like: #fun";
 
     private final String name;
 
@@ -62,13 +62,13 @@ public class Tag {
         }
 
         if (wanted.isBlank()) {
-            throw new KenbotException("A tag needs a name after the '#', like: #fun");
+            throw new KenbotException("Need a name after the '#', like: #fun");
         }
         // Checked even though Parser rejects a bar in the whole line: tags are
         // also built from the save file, which never passes through Parser.
         if (wanted.contains("|")) {
-            throw new KenbotException("A tag can't contain the '|' character"
-                    + " - I use it to separate fields in my save file.");
+            throw new KenbotException("Can't use '|' in a tag, that's what"
+                    + " splits the fields in my save file.");
         }
         if (wanted.chars().anyMatch(Character::isWhitespace)) {
             throw new KenbotException(USAGE_MESSAGE);

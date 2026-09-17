@@ -60,7 +60,7 @@ public class TaskDate {
      */
     public static TaskDate of(String text) throws KenbotException {
         if (text.isBlank()) {
-            throw new KenbotException("I need a date, written as yyyy-mm-dd,"
+            throw new KenbotException("Need a date written as yyyy-mm-dd,"
                     + " like: 2019-10-15");
         }
 
@@ -72,7 +72,7 @@ public class TaskDate {
         } catch (DateTimeParseException e) {
             // Java's own error is turned into ours, so callers only ever have
             // one kind of problem to handle.
-            throw new KenbotException("'" + parts[0] + "' is not a date I understand."
+            throw new KenbotException("'" + parts[0] + "' isn't a date I can read."
                     + " Write it as yyyy-mm-dd, like: 2019-10-15 1800");
         }
     }

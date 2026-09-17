@@ -26,7 +26,7 @@ public class Todo extends Task {
         // and never mistake a trailing tag for one.
         Tag.TaggedText split = Tag.splitTrailingTags(argument);
         if (split.text().isBlank()) {
-            throw new KenbotException("A todo needs a description, like:\n"
+            throw new KenbotException("Need a description for that. Like:\n"
                     + "  todo read book");
         }
 

@@ -60,6 +60,6 @@ public enum CommandType {
         return Arrays.stream(values())
                 .filter(command -> command.name().toLowerCase().equals(word))
                 .findFirst()
-                .orElseThrow(() -> new KenbotException("I don't know what that means."));
+                .orElseThrow(() -> new KenbotException("Don't know that one."));
     }
 }

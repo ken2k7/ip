@@ -52,7 +52,7 @@ public class ParserTest {
     @Test
     public void parse_argumentContainingBar_throws() {
         KenbotException thrown = assertThrows(KenbotException.class, () -> Parser.parse("todo read | book"));
-        assertEquals("Sorry, a task can't contain the '|' character"
-                + " - I use it to separate fields in my save file.", thrown.getMessage());
+        assertEquals("Can't use '|' in a task, that's what"
+                + " splits the fields in my save file.", thrown.getMessage());
     }
 }

@@ -82,7 +82,7 @@ public class Storage {
         try {
             lines = Files.readAllLines(file);
         } catch (IOException e) {
-            throw new KenbotException("I couldn't read your saved tasks from "
+            throw new KenbotException("Couldn't read your saved tasks from "
                     + file + ": " + e.getMessage());
         }
 
@@ -143,7 +143,7 @@ public class Storage {
         } catch (IOException e) {
             // Java's file error becomes ours, so Kenbot still has only one kind
             // of problem to catch and print.
-            throw new KenbotException("I couldn't save your tasks to "
+            throw new KenbotException("Couldn't save your tasks to "
                     + file + ": " + e.getMessage());
         }
     }

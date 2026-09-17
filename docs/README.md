@@ -101,9 +101,9 @@ Example: `todo read book`
 
 ```
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ```
 
@@ -115,9 +115,9 @@ Example: `deadline return book /by 2019-10-15`
 
 ```
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [D][ ] return book (by: Oct 15 2019)
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ```
 
@@ -129,9 +129,9 @@ Example: `event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600`
 
 ```
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [E][ ] project meeting (from: Oct 15 2019 1400 to: Oct 15 2019 1600)
-Now you have 3 tasks in the list.
+That makes 3 tasks.
 ____________________________________________________________
 ```
 
@@ -141,7 +141,7 @@ Example: `list`
 
 ```
 ____________________________________________________________
-Here are the tasks in your list:
+Here's what you've got:
 1.[T][ ] read book
 2.[D][ ] return book (by: Oct 15 2019)
 3.[E][ ] project meeting (from: Oct 15 2019 1400 to: Oct 15 2019 1600)
@@ -155,7 +155,7 @@ An empty list says so rather than showing nothing:
 
 ```
 ____________________________________________________________
-You have no tasks yet.
+Nothing on the list yet.
 ____________________________________________________________
 ```
 
@@ -167,7 +167,7 @@ Example: `mark 1`
 
 ```
 ____________________________________________________________
-Nice! I've marked this task as done:
+Nice, that's done:
   [T][X] read book
 ____________________________________________________________
 ```
@@ -176,7 +176,7 @@ Example: `unmark 1`
 
 ```
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+Alright, back on the list:
   [T][ ] read book
 ____________________________________________________________
 ```
@@ -187,9 +187,9 @@ Example: `delete 2`
 
 ```
 ____________________________________________________________
-Noted. I've removed this task:
+Gone:
   [D][ ] return book (by: Oct 15 2019)
-Now you have 2 tasks in the list.
+That makes 2 tasks.
 ____________________________________________________________
 ```
 
@@ -207,9 +207,9 @@ Example: `todo read book #fun #cs2103`
 
 ```
 ____________________________________________________________
-Got it. I've added this task:
+Got it, that's on the list:
   [T][ ] read book #fun #cs2103
-Now you have 1 tasks in the list.
+That makes 1 task.
 ____________________________________________________________
 ```
 
@@ -227,7 +227,7 @@ Example: `tag 1 fun cs2103`
 
 ```
 ____________________________________________________________
-Tagged it:
+Tagged:
   [T][ ] read book #fun #cs2103
 ____________________________________________________________
 ```
@@ -238,7 +238,7 @@ Example: `untag 1 fun`
 
 ```
 ____________________________________________________________
-Removed that:
+Untagged:
   [T][ ] read book #cs2103
 ____________________________________________________________
 ```
@@ -259,7 +259,7 @@ Example: `find book`
 
 ```
 ____________________________________________________________
-Here are the matching tasks in your list:
+Found these:
 1.[T][X] read book
 2.[D][ ] return book (by: Oct 15 2019)
 ____________________________________________________________
@@ -269,7 +269,7 @@ If nothing matches, Kenbot says so:
 
 ```
 ____________________________________________________________
-No tasks match 'xyz'.
+Nothing matches 'xyz'.
 ____________________________________________________________
 ```
 

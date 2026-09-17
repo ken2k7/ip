@@ -117,9 +117,9 @@ public class TaskList {
      */
     public String describe() {
         if (tasks.isEmpty()) {
-            return "You have no tasks yet.";
+            return "Nothing on the list yet.";
         }
-        return formatNumbered("Here are the tasks in your list:", tasks);
+        return formatNumbered("Here's what you've got:", tasks);
     }
 
     /**
@@ -136,7 +136,7 @@ public class TaskList {
      */
     public String find(String keyword) throws KenbotException {
         if (keyword.isBlank()) {
-            throw new KenbotException("Tell me what to look for, like: find book");
+            throw new KenbotException("What am I looking for? Like: find book");
         }
 
         String wanted = keyword.trim().toLowerCase();
@@ -146,7 +146,7 @@ public class TaskList {
         boolean searchesTags = wanted.startsWith("#");
         String needle = searchesTags ? wanted.substring(1) : wanted;
         if (needle.isBlank()) {
-            throw new KenbotException("Tell me which tag to look for, like: find #fun");
+            throw new KenbotException("Which tag? Like: find #fun");
         }
 
         // Choosing which tasks match is what a stream does best: one filter,
@@ -157,9 +157,9 @@ public class TaskList {
                 .toList();
 
         if (matches.isEmpty()) {
-            return "No tasks match '" + keyword.trim() + "'.";
+            return "Nothing matches '" + keyword.trim() + "'.";
         }
-        return formatNumbered("Here are the matching tasks in your list:", matches);
+        return formatNumbered("Found these:", matches);
     }
 
     /**
@@ -188,7 +188,7 @@ public class TaskList {
      */
     public Task tag(String argument) throws KenbotException {
         return applyTags(argument, "tag", Task::addTag,
-                "That task already has every one of those tags.");
+                "It's already got those.");
     }
 
     /**
@@ -200,7 +200,7 @@ public class TaskList {
      */
     public Task untag(String argument) throws KenbotException {
         return applyTags(argument, "untag", Task::removeTag,
-                "That task doesn't have any of those tags.");
+                "It doesn't have those.");
     }
 
     /**
@@ -224,8 +224,8 @@ public class TaskList {
             BiPredicate<Task, Tag> change, String nothingChanged) throws KenbotException {
         String[] parts = argument.trim().split("\\s+", 2);
         if (parts.length < 2 || parts[1].isBlank()) {
-            throw new KenbotException("Tell me which task to " + commandName
-                    + " and with what, like: " + commandName + " 2 fun");
+            throw new KenbotException("Which task to " + commandName
+                    + ", and with what? Like: " + commandName + " 2 fun");
         }
 
         Task task = tasks.get(indexOf(parts[0], commandName));
@@ -286,8 +286,8 @@ public class TaskList {
      */
     private int indexOf(String argument, String commandName) throws KenbotException {
         if (argument.isBlank()) {
-            throw new KenbotException("Tell me which task to " + commandName
-                    + ", like: " + commandName + " 2");
+            throw new KenbotException("Which task to " + commandName
+                    + "? Like: " + commandName + " 2");
         }
 
         String wanted = argument.trim();
@@ -297,16 +297,16 @@ public class TaskList {
         } catch (NumberFormatException e) {
             // Java's own error is turned into ours, so the caller only ever
             // has to handle one kind of problem.
-            throw new KenbotException("'" + wanted + "' is not a task number.");
+            throw new KenbotException("'" + wanted + "' isn't a task number.");
         }
 
         if (tasks.isEmpty()) {
-            throw new KenbotException("There is no task " + number
-                    + ". Your list is empty.");
+            throw new KenbotException("There's no task " + number
+                    + ", the list is empty.");
         }
         if (number < 1 || number > tasks.size()) {
-            throw new KenbotException("There is no task " + number + ". You have "
-                    + tasks.size() + " task(s).");
+            throw new KenbotException("There's no task " + number + ". You've got "
+                    + tasks.size() + ".");
         }
 
         int index = number - 1;

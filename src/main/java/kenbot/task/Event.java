@@ -7,7 +7,7 @@ public class Event extends Task {
 
     /** Shown whenever the text after {@code event} is missing one of its three parts. */
     private static final String USAGE_MESSAGE =
-            "An event needs a description, a /from and a /to, like:\n"
+            "Events need a description, a /from and a /to. Like:\n"
             + "  event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600";
 
     private final TaskDate from;

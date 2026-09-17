@@ -32,7 +32,7 @@ public class Ui {
      * <p>Kept apart from {@link #BANNER} because the ASCII art only reads
      * correctly in a fixed-width console; a window shows these words alone.</p>
      */
-    private static final String GREETING = "Yo! I'm Kenbot\nHow may I help you today?";
+    private static final String GREETING = "Yo, I'm Kenbot.\nWhat are we getting done today?";
 
     private final Scanner scanner = new Scanner(System.in);
 
