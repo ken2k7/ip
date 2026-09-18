@@ -182,10 +182,10 @@ public class Storage {
 
         boolean isDone = parseDoneFlag(parts[1]);
 
-        // Each kind of task has its own number of fields, so the count is
-        // checked before any field is read. Without this, a line missing a
-        // field would end the program with an out-of-bounds error.
-        // How many fields this kind of task uses before its optional tag field.
+        // Each kind of task has its own number of fields, and the count is
+        // checked before any field is read: without that, a line missing a
+        // field would end the program with an out-of-bounds error. The count
+        // is kept because it is also where the optional tag field would start.
         int untagged;
         Task task = switch (parts[0]) {
             case "T" -> {
