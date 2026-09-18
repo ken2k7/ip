@@ -66,12 +66,21 @@ Each example below shows what Kenbot says back.
 | `delete NUMBER` | removes a task |
 | `find KEYWORD` | shows tasks whose description contains the keyword |
 | `find #TAG` | shows tasks carrying that tag |
-| `tag NUMBER TAG...` | adds one or more tags to a task |
-| `untag NUMBER TAG...` | removes one or more tags from a task |
+| `tag NUMBER TAG…` | adds one or more tags to a task |
+| `untag NUMBER TAG…` | removes one or more tags from a task |
 | `bye` | exits |
 
-Any of the three commands that add a task also accepts tags at the end of the
-line, so `todo read book #fun` works without a separate `tag` command.
+### Notes about the command format
+
+* Words in `UPPER_CASE` are the values you supply.
+  e.g. in `todo DESCRIPTION`, you might type `todo read book`.
+* Items in square brackets are optional.
+  e.g. `todo DESCRIPTION [#TAG]…` can be `todo read book #fun`, or just
+  `todo read book`.
+* Items with `…` after them can be given more than once, including zero times.
+  e.g. `[#TAG]…` can be left out, or given as `#fun`, or as `#fun #cs2103`.
+* Commands are lower case. `Todo` and `LIST` are not recognised.
+* Extra words after a command that takes none, such as `list now`, are ignored.
 
 ## How to write dates
 
@@ -82,15 +91,17 @@ Dates go in as `yyyy-mm-dd`, and you may add a time after a space:
 2019-10-15 1800
 ```
 
-Kenbot shows them back in a friendlier form — `Oct 15 2019` and
+Kenbot shows them back in a friendlier form: `Oct 15 2019` and
 `Oct 15 2019 1800`.
 
 Anything that is not a real date is refused, so `Sunday` and `15-10-2019` will
 both be rejected with a reminder of the accepted format.
 
-## Adding a to-do
+## Adding a to-do: `todo`
 
 A task with nothing but a description.
+
+Format: `todo DESCRIPTION [#TAG]…`
 
 Example: `todo read book`
 
@@ -100,9 +111,11 @@ Got it, that's on the list:
 That makes 1 task.
 ```
 
-## Adding a deadline
+## Adding a deadline: `deadline`
 
 A task that has to be finished by a particular date.
+
+Format: `deadline DESCRIPTION /by DATE [#TAG]…`
 
 Example: `deadline return book /by 2019-10-15`
 
@@ -112,9 +125,11 @@ Got it, that's on the list:
 That makes 2 tasks.
 ```
 
-## Adding an event
+## Adding an event: `event`
 
 A task that runs from one date to another. Times are optional on either end.
+
+Format: `event DESCRIPTION /from DATE /to DATE [#TAG]…`
 
 Example: `event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600`
 
@@ -124,9 +139,11 @@ Got it, that's on the list:
 That makes 3 tasks.
 ```
 
-## Listing your tasks
+## Listing your tasks: `list`
 
 Example: `list`
+
+Format: `list`
 
 ```
 Here's what you've got:
@@ -135,7 +152,7 @@ Here's what you've got:
 3.[E][ ] project meeting (from: Oct 15 2019 1400 to: Oct 15 2019 1600)
 ```
 
-The letter in the first brackets is the kind of task — `T` for to-do, `D` for
+The letter in the first brackets is the kind of task: `T` for to-do, `D` for
 deadline, `E` for event. The second brackets hold an `X` once the task is done.
 
 An empty list says so rather than showing nothing:
@@ -144,9 +161,11 @@ An empty list says so rather than showing nothing:
 Nothing on the list yet.
 ```
 
-## Marking a task done, or not done
+## Marking a task done, or not done: `mark`, `unmark`
 
 Use the number shown by `list`.
+
+Format: `mark NUMBER` or `unmark NUMBER`
 
 Example: `mark 1`
 
@@ -162,9 +181,11 @@ Alright, back on the list:
   [T][ ] read book
 ```
 
-## Deleting a task
+## Deleting a task: `delete`
 
 Example: `delete 2`
+
+Format: `delete NUMBER`
 
 ```
 Gone:
@@ -175,10 +196,15 @@ That makes 2 tasks.
 The remaining tasks are renumbered straight away, so `list` always runs from 1
 with no gaps.
 
-## Tagging a task
+## Tagging a task: `tag`, `untag`
 
 A tag is a short label such as `#fun` or `#cs2103`. A task can carry any number
 of them, and they are shown at the end of its line.
+
+Format: `tag NUMBER TAG…` or `untag NUMBER TAG…`
+
+You can also put tags straight on a new task, as `[#TAG]…` in the three
+commands above.
 
 The quickest way is to put them at the end when you create the task:
 
@@ -190,7 +216,7 @@ Got it, that's on the list:
 That makes 1 task.
 ```
 
-This works for deadlines and events too — put the tags after the dates:
+This works for deadlines and events too. Put the tags after the dates:
 `deadline return book /by 2019-10-15 #urgent`.
 
 Only `#` words at the **end** of the line become tags. A `#` with ordinary words
@@ -219,14 +245,16 @@ Untagged:
 A tag is one word with no spaces, and cannot contain `|`. Capitals count:
 `#Fun` and `#fun` are two different tags.
 
-## Finding tasks
+## Finding tasks: `find`
 
 Searches the descriptions. Upper and lower case are ignored, and part of a word
-counts — `find book` also finds "bookshop".
+counts, so `find book` also finds "bookshop".
+
+Format: `find KEYWORD` to search descriptions, or `find #TAG` to search tags
 
 Start the keyword with `#` to search **tags** instead: `find #cs` finds anything
 tagged `#cs2103`. The `#` is what chooses which one is searched, so `find fun`
-will not find a task tagged `#fun` — you need `find #fun`.
+will not find a task tagged `#fun`. You need `find #fun`.
 
 Example: `find book`
 
@@ -242,15 +270,17 @@ If nothing matches, Kenbot says so:
 Nothing matches 'xyz'.
 ```
 
-## Leaving
+## Leaving: `bye`
 
 Example: `bye`
+
+Format: `bye`
 
 ```
 Peace! See you soon!
 ```
 
-In a terminal this ends the program. In the window it is only a goodbye — close
+In a terminal this ends the program. In the window it is only a goodbye. Close
 the window itself when you are finished.
 
 Either way your tasks are already saved: every command writes the file
