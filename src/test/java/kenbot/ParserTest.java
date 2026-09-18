@@ -2,6 +2,7 @@ package kenbot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -54,5 +55,41 @@ public class ParserTest {
         KenbotException thrown = assertThrows(KenbotException.class, () -> Parser.parse("todo read | book"));
         assertEquals("Can't use '|' in a task, that's what"
                 + " splits the fields in my save file.", thrown.getMessage());
+    }
+
+    @Test
+    public void requireAtMostOne_markerAbsent_isAccepted() throws KenbotException {
+        Parser.requireAtMostOne("read book", " /by ");
+    }
+
+    @Test
+    public void requireAtMostOne_markerOnce_isAccepted() throws KenbotException {
+        Parser.requireAtMostOne("read book /by 2019-10-15", " /by ");
+    }
+
+    @Test
+    public void requireAtMostOne_markerTwice_throws() {
+        assertThrows(KenbotException.class, () ->
+                Parser.requireAtMostOne("x /by 2019-10-15 /by 2019-10-20", " /by "));
+    }
+
+    @Test
+    public void requireAtMostOne_markerThreeTimes_throws() {
+        assertThrows(KenbotException.class, () ->
+                Parser.requireAtMostOne("x /to a /to b /to c", " /to "));
+    }
+
+    @Test
+    public void requireAtMostOne_overlappingLooking_countsSeparately() throws KenbotException {
+        // Two different markers in one line is normal for an event.
+        Parser.requireAtMostOne("x /from a /to b", " /from ");
+        Parser.requireAtMostOne("x /from a /to b", " /to ");
+    }
+
+    @Test
+    public void requireAtMostOne_markerTwice_namesItInTheMessage() {
+        KenbotException thrown = assertThrows(KenbotException.class, () ->
+                Parser.requireAtMostOne("x /by a /by b", " /by "));
+        assertTrue(thrown.getMessage().contains("/by"));
     }
 }
