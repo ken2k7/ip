@@ -1,6 +1,7 @@
 package kenbot;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -81,6 +82,11 @@ public class Storage {
         List<String> lines;
         try {
             lines = Files.readAllLines(file);
+        } catch (AccessDeniedException e) {
+            // Caught separately because its message is only the file path, so
+            // the general wording below would repeat the name and never say why.
+            throw new KenbotException("I'm not allowed to read " + file
+                    + ". Check the file's permissions.");
         } catch (IOException e) {
             throw new KenbotException("Couldn't read your saved tasks from "
                     + file + ": " + e.getMessage());
@@ -140,6 +146,9 @@ public class Storage {
             // Files.write creates the file if it is absent and empties it if it
             // is present, which is exactly the overwrite that is wanted here.
             Files.write(file, lines);
+        } catch (AccessDeniedException e) {
+            throw new KenbotException("I'm not allowed to write to " + file
+                    + ". Check the folder's permissions.");
         } catch (IOException e) {
             // Java's file error becomes ours, so Kenbot still has only one kind
             // of problem to catch and print.

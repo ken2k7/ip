@@ -25,6 +25,7 @@ public class Kenbot {
     private final Ui ui;
     private boolean isExit = false;
     private boolean isLastResponseError = false;
+    private String startupNotice = "";
 
     /**
      * Creates a chatbot that keeps its tasks in the given file.
@@ -40,6 +41,9 @@ public class Kenbot {
     /** Greets the user, then carries out commands until there are no more. */
     public void run() {
         ui.showGreeting();
+        if (!startupNotice.isEmpty()) {
+            ui.showError(startupNotice);
+        }
 
         // hasNextCommand() is checked first so running out of input ends the
         // loop quietly instead of throwing.
@@ -82,14 +86,31 @@ public class Kenbot {
         try {
             Storage.LoadResult result = storage.load();
             if (result.skippedLines() > 0) {
-                ui.show("Couldn't read " + result.skippedLines()
-                        + " line(s) from your save file, so I skipped them.");
+                startupNotice = "Couldn't read " + result.skippedLines()
+                        + " line(s) from your save file, so I skipped them.";
             }
             return new TaskList(result.tasks());
         } catch (KenbotException e) {
-            ui.showError(e.getMessage());
+            startupNotice = e.getMessage();
             return new TaskList();
         }
+    }
+
+    /**
+     * Returns anything that went wrong while loading, or an empty string.
+     *
+     * <p>Recorded rather than printed because loading happens in the
+     * constructor, before either front end has anything to show it on, and
+     * because the two show it differently: the console prints a block, the
+     * window adds a message to the conversation. Printing it here would send it
+     * to the terminal, which a window user may not even have open, so a save
+     * file that could not be read would look exactly like an empty list.</p>
+     *
+     * @return the problem to tell the user about, or an empty string if loading
+     *         went fine
+     */
+    public String getStartupNotice() {
+        return startupNotice;
     }
 
     /**

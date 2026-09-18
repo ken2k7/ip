@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -134,5 +136,47 @@ public class KenbotTest {
         kenbot.getResponse("todo read book");
         kenbot.getResponse("delete 99");
         assertTrue(kenbot.isLastResponseError());
+    }
+
+    @Test
+    public void getStartupNotice_nothingWrong_isEmpty() {
+        assertEquals("", kenbotIn(folder).getStartupNotice());
+    }
+
+    @Test
+    public void getStartupNotice_noSaveFileYet_isEmptyBecauseThatIsNormal() {
+        // A first run on a new machine is not a problem worth reporting.
+        assertEquals("", kenbotIn(folder).getStartupNotice());
+    }
+
+    @Test
+    public void getStartupNotice_lineThatCannotBeRead_saysHowManyWereSkipped()
+            throws Exception {
+        Path file = folder.resolve("data").resolve("tasks.txt");
+        Files.createDirectories(file.getParent());
+        Files.write(file, List.of("T | 0 | good one", "GARBAGE", "T | 0 | good two"));
+
+        Kenbot kenbot = kenbotIn(folder);
+        assertTrue(kenbot.getStartupNotice().contains("1 line(s)"),
+                "the user must be told something was skipped");
+        assertTrue(kenbot.getResponse("list").contains("good one"),
+                "the lines that could be read must still load");
+    }
+
+    @Test
+    public void getStartupNotice_savePathIsAFolder_explainsTheProblem() throws Exception {
+        Path file = folder.resolve("data").resolve("tasks.txt");
+        Files.createDirectories(file);
+
+        Kenbot kenbot = kenbotIn(folder);
+        assertFalse(kenbot.getStartupNotice().isEmpty(),
+                "an unreadable save file must not look like an empty list");
+
+        // Writing fails for the same reason reading did, so the reply is that
+        // failure rather than the list. What matters is that it answers at all:
+        // the app stays usable and says what is wrong.
+        String reply = kenbot.getResponse("list");
+        assertFalse(reply.isBlank(), "the app must still answer, not die");
+        assertTrue(kenbot.isLastResponseError(), "and must mark it as a problem");
     }
 }

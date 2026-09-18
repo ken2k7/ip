@@ -67,6 +67,15 @@ public class MainWindow extends AnchorPane {
         this.kenbot = kenbot;
         dialogContainer.getChildren().add(
                 DialogBox.getKenbotDialog(kenbot.getGreeting(), kenbotImage));
+
+        // A save file that could not be read would otherwise look exactly like
+        // an empty list, since the console's own report goes to a terminal a
+        // window user may never see.
+        String notice = kenbot.getStartupNotice();
+        if (!notice.isEmpty()) {
+            dialogContainer.getChildren().add(
+                    DialogBox.getErrorDialog(notice, kenbotImage));
+        }
     }
 
     /**
