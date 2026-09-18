@@ -1,6 +1,7 @@
 package kenbot.task;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -75,6 +76,54 @@ public class TaskDate {
             throw new KenbotException("'" + parts[0] + "' isn't a date I can read."
                     + " Write it as yyyy-mm-dd, like: 2019-10-15 1800");
         }
+    }
+
+    /**
+     * Returns whether this point in time comes after another.
+     *
+     * <p>The date decides it. When both fall on the same day the time of day is
+     * used instead, but only when both were written as a real time: the time is
+     * kept as the user typed it, so it may be something like "after lunch" that
+     * cannot be compared. Two points that cannot be ordered are reported as not
+     * after each other, which lets an event through rather than refusing
+     * something that may well be fine.</p>
+     *
+     * @param other the point in time to compare with
+     * @return true if this is definitely later than the other
+     */
+    public boolean isAfter(TaskDate other) {
+        if (!date.equals(other.date)) {
+            return date.isAfter(other.date);
+        }
+
+        LocalTime mine = asLocalTime();
+        LocalTime theirs = other.asLocalTime();
+        if (mine == null || theirs == null) {
+            return false;
+        }
+        return mine.isAfter(theirs);
+    }
+
+    /**
+     * Returns the time of day as a real time, or null if it was not written as
+     * one.
+     *
+     * @return the parsed time, or null when it cannot be read as a time
+     */
+    private LocalTime asLocalTime() {
+        if (time.isEmpty()) {
+            return null;
+        }
+        for (String pattern : new String[] {"HHmm", "HH:mm", "H:mm"}) {
+            try {
+                return LocalTime.parse(time, DateTimeFormatter.ofPattern(pattern));
+            } catch (DateTimeParseException e) {
+                // Try the next shape; a time nobody can read is not an error
+                // here, it just means the two cannot be ordered.
+                continue;
+            }
+        }
+        return null;
     }
 
     /**

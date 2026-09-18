@@ -39,9 +39,20 @@ public class TaskList {
     /**
      * Adds a task to the end of the list.
      *
+     * <p>An exact copy of a task already stored is refused. Adding the same
+     * thing twice is almost always a double keypress rather than an intention,
+     * and two identical lines are impossible to tell apart afterwards when
+     * marking or deleting one of them.</p>
+     *
      * @param task the task to store
+     * @throws KenbotException if the same task is already in the list
      */
-    public void add(Task task) {
+    public void add(Task task) throws KenbotException {
+        for (Task existing : tasks) {
+            if (existing.isSameTask(task)) {
+                throw new KenbotException("That's already on the list:\n  " + existing);
+            }
+        }
         tasks.add(task);
     }
 

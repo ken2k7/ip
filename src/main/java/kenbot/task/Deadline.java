@@ -1,6 +1,7 @@
 package kenbot.task;
 
 import kenbot.KenbotException;
+import kenbot.Parser;
 
 /** Represents a task that must be completed by a specified time. */
 public class Deadline extends Task {
@@ -28,6 +29,7 @@ public class Deadline extends Task {
         // Tags come off before /by is looked for, so this method never has to
         // know that a date might be followed by a tag.
         Tag.TaggedText split = Tag.splitTrailingTags(argument);
+        Parser.requireAtMostOne(split.text(), " /by ");
         String[] parts = split.text().split(" /by ", 2);
         if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
             throw new KenbotException(

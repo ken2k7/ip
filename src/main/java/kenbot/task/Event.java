@@ -1,6 +1,7 @@
 package kenbot.task;
 
 import kenbot.KenbotException;
+import kenbot.Parser;
 
 /** Represents a task that takes place between a start and end time. */
 public class Event extends Task {
@@ -38,6 +39,8 @@ public class Event extends Task {
         // Tags come off before /from and /to are looked for, so neither split
         // below can pick a trailing tag up as part of a date.
         Tag.TaggedText split = Tag.splitTrailingTags(argument);
+        Parser.requireAtMostOne(split.text(), " /from ");
+        Parser.requireAtMostOne(split.text(), " /to ");
         String[] descriptionAndRest = split.text().split(" /from ", 2);
         if (descriptionAndRest.length != 2) {
             throw new KenbotException(USAGE_MESSAGE);
@@ -55,7 +58,16 @@ public class Event extends Task {
             throw new KenbotException(USAGE_MESSAGE);
         }
 
-        Event event = new Event(description.trim(), TaskDate.of(start), TaskDate.of(end));
+        TaskDate startDate = TaskDate.of(start);
+        TaskDate endDate = TaskDate.of(end);
+        // Stored the wrong way round this would read back as a task that ends
+        // before it begins, which no later command could make sense of.
+        if (startDate.isAfter(endDate)) {
+            throw new KenbotException("An event can't end before it starts."
+                    + " You gave " + startDate + " to " + endDate + ".");
+        }
+
+        Event event = new Event(description.trim(), startDate, endDate);
         split.tags().forEach(event::addTag);
         return event;
     }

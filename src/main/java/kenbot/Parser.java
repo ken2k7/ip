@@ -23,6 +23,31 @@ public class Parser {
     }
 
     /**
+     * Checks that a command marker such as {@code /by} was given at most once.
+     *
+     * <p>Without this a second marker is not rejected but quietly absorbed:
+     * {@code deadline x /by 2019-10-15 /by 2019-10-20} used to split at the
+     * first one and keep " /by 2019-10-20" as the time of day, producing a task
+     * that reads back as nonsense. Refusing is better than storing something the
+     * user did not mean.</p>
+     *
+     * <p>Lives here rather than in each task type so all three agree on what
+     * counts as a repeat.</p>
+     *
+     * @param argument the text typed after the command word
+     * @param marker the marker to count, spaced as it appears, such as {@code " /by "}
+     * @throws KenbotException if the marker appears more than once
+     */
+    public static void requireAtMostOne(String argument, String marker)
+            throws KenbotException {
+        int first = argument.indexOf(marker);
+        if (first >= 0 && argument.indexOf(marker, first + marker.length()) >= 0) {
+            throw new KenbotException("You've given" + marker.stripTrailing()
+                    + " more than once. I only know what to do with one.");
+        }
+    }
+
+    /**
      * Works out which command a line of input is asking for.
      *
      * @param input the whole line the user typed, already trimmed and not empty

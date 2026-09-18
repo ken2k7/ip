@@ -296,6 +296,15 @@ immediately, so nothing is lost even if you close Kenbot without typing `bye`.
   fields in its save file, so a task containing one is refused when you type it.
 * **The numbers `find` shows start from 1** and are not the numbers to use with
   `mark` or `delete`. Run `list` first if you need the real number.
+* **An event cannot end before it starts.** If both ends fall on the same day
+  the times decide it, so `1600` to `1400` is refused. A whole day, with no
+  times given at all, is fine.
+* **The same task twice is refused.** Adding an exact copy of something already
+  on the list is almost always a double keypress, and two identical lines are
+  impossible to tell apart when you later mark or delete one. Capitals count, so
+  `read book` and `Read book` are two different tasks.
+* **Each of `/by`, `/from` and `/to` may be given once.** Writing one twice used
+  to have the second quietly swallowed into the date; it is now reported.
 * **Tags are optional everywhere.** A task without any is stored and shown
   exactly as it was before tags existed, so a save file from an older Kenbot
   still opens and nothing needs converting.

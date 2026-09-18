@@ -1,7 +1,9 @@
 package kenbot.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -62,5 +64,41 @@ public class TaskDateTest {
     @Test
     public void of_blank_throws() {
         assertThrows(KenbotException.class, () -> TaskDate.of("   "));
+    }
+
+    @Test
+    public void isAfter_laterDate_isTrue() throws KenbotException {
+        assertTrue(TaskDate.of("2019-10-20").isAfter(TaskDate.of("2019-10-15")));
+    }
+
+    @Test
+    public void isAfter_earlierDate_isFalse() throws KenbotException {
+        assertFalse(TaskDate.of("2019-10-15").isAfter(TaskDate.of("2019-10-20")));
+    }
+
+    @Test
+    public void isAfter_sameDateLaterTime_isTrue() throws KenbotException {
+        assertTrue(TaskDate.of("2019-10-15 1600").isAfter(TaskDate.of("2019-10-15 1400")));
+    }
+
+    @Test
+    public void isAfter_sameDateAndTime_isFalse() throws KenbotException {
+        assertFalse(TaskDate.of("2019-10-15 1400").isAfter(TaskDate.of("2019-10-15 1400")));
+    }
+
+    @Test
+    public void isAfter_sameDateColonTime_stillCompares() throws KenbotException {
+        assertTrue(TaskDate.of("2019-10-15 16:00").isAfter(TaskDate.of("2019-10-15 14:00")));
+    }
+
+    @Test
+    public void isAfter_sameDateNoTimes_isFalse() throws KenbotException {
+        assertFalse(TaskDate.of("2019-10-15").isAfter(TaskDate.of("2019-10-15")));
+    }
+
+    @Test
+    public void isAfter_timesThatCannotBeRead_isFalse() throws KenbotException {
+        // Unorderable rather than out of order, so it is reported as not after.
+        assertFalse(TaskDate.of("2019-10-15 evening").isAfter(TaskDate.of("2019-10-15 morning")));
     }
 }

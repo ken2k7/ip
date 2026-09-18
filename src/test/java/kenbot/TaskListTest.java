@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import kenbot.task.Deadline;
 import kenbot.task.Todo;
 
 /**
@@ -14,8 +15,11 @@ import kenbot.task.Todo;
  */
 public class TaskListTest {
 
-    /** Builds a list of to-dos named a, b, c... so positions are easy to read. */
-    private static TaskList listOf(String... descriptions) {
+    /**
+     * Builds a list of to-dos named a, b, c... so positions are easy to read.
+     * The descriptions are distinct, so the duplicate check never fires here.
+     */
+    private static TaskList listOf(String... descriptions) throws KenbotException {
         TaskList tasks = new TaskList();
         for (String description : descriptions) {
             tasks.add(new Todo(description));
@@ -24,12 +28,12 @@ public class TaskListTest {
     }
 
     @Test
-    public void describe_emptyList_saysSoInsteadOfShowingNothing() {
+    public void describe_emptyList_saysSoInsteadOfShowingNothing() throws KenbotException {
         assertEquals("Nothing on the list yet.", new TaskList().describe());
     }
 
     @Test
-    public void describe_threeTasks_numbersThemFromOne() {
+    public void describe_threeTasks_numbersThemFromOne() throws KenbotException {
         assertEquals("Here's what you've got:"
                 + "\n1.[T][ ] a\n2.[T][ ] b\n3.[T][ ] c", listOf("a", "b", "c").describe());
     }
@@ -62,29 +66,29 @@ public class TaskListTest {
     }
 
     @Test
-    public void delete_numberPastTheEnd_throwsAndSaysHowManyThereAre() {
+    public void delete_numberPastTheEnd_throwsAndSaysHowManyThereAre() throws KenbotException {
         KenbotException thrown = assertThrows(KenbotException.class, () -> listOf("a").delete("5"));
         assertEquals("There's no task 5. You've got 1.", thrown.getMessage());
     }
 
     @Test
-    public void delete_onEmptyList_saysTheListIsEmpty() {
+    public void delete_onEmptyList_saysTheListIsEmpty() throws KenbotException {
         KenbotException thrown = assertThrows(KenbotException.class, () -> new TaskList().delete("1"));
         assertEquals("There's no task 1, the list is empty.", thrown.getMessage());
     }
 
     @Test
-    public void mark_notANumber_throws() {
+    public void mark_notANumber_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").mark("abc"));
     }
 
     @Test
-    public void mark_noNumberGiven_throws() {
+    public void mark_noNumberGiven_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").mark(""));
     }
 
     @Test
-    public void mark_zero_throwsBecauseNumbersStartAtOne() {
+    public void mark_zero_throwsBecauseNumbersStartAtOne() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").mark("0"));
     }
 
@@ -112,7 +116,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void find_noKeyword_throws() {
+    public void find_noKeyword_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("read book").find("  "));
     }
 
@@ -120,10 +124,43 @@ public class TaskListTest {
      * The list handed out for reading must not be a way to change the real one.
      */
     @Test
-    public void getTasks_tryingToAddToTheCopy_isRefused() {
+    public void getTasks_tryingToAddToTheCopy_isRefused() throws KenbotException {
         TaskList tasks = listOf("a");
         assertThrows(UnsupportedOperationException.class, () -> tasks.getTasks().add(new Todo("b")));
         assertEquals(1, tasks.size());
+    }
+
+    @Test
+    public void add_exactDuplicate_isRefused() throws KenbotException {
+        TaskList tasks = listOf("read book");
+        KenbotException thrown = assertThrows(KenbotException.class, () ->
+                tasks.add(new Todo("read book")));
+        assertTrue(thrown.getMessage().contains("already on the list"));
+        assertEquals(1, tasks.size(), "the refused task must not be stored");
+    }
+
+    @Test
+    public void add_sameTextDifferentCase_isAllowed() throws KenbotException {
+        // Treated as different on purpose, so a deliberate second task is never
+        // silently refused.
+        TaskList tasks = listOf("read book");
+        tasks.add(new Todo("Read book"));
+        assertEquals(2, tasks.size());
+    }
+
+    @Test
+    public void add_duplicateOfADoneTask_isStillRefused() throws KenbotException {
+        // Ticking something off does not make it a different task.
+        TaskList tasks = listOf("read book");
+        tasks.mark("1");
+        assertThrows(KenbotException.class, () -> tasks.add(new Todo("read book")));
+    }
+
+    @Test
+    public void add_sameDescriptionDifferentType_isAllowed() throws KenbotException {
+        TaskList tasks = listOf("read book");
+        tasks.add(Deadline.of("read book /by 2019-10-15"));
+        assertEquals(2, tasks.size());
     }
 
     @Test
@@ -150,22 +187,22 @@ public class TaskListTest {
     }
 
     @Test
-    public void tag_noTagGiven_throws() {
+    public void tag_noTagGiven_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").tag("1"));
     }
 
     @Test
-    public void tag_numberOutOfRange_throws() {
+    public void tag_numberOutOfRange_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").tag("2 fun"));
     }
 
     @Test
-    public void tag_unusableTag_throws() {
+    public void tag_unusableTag_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").tag("1 bad|tag"));
     }
 
     @Test
-    public void tag_oneBadTagAmongGoodOnes_leavesTheTaskUnchanged() {
+    public void tag_oneBadTagAmongGoodOnes_leavesTheTaskUnchanged() throws KenbotException {
         TaskList tasks = listOf("a");
         assertThrows(KenbotException.class, () -> tasks.tag("1 fun bad|tag"));
         assertEquals("Here's what you've got:\n1.[T][ ] a", tasks.describe());
@@ -179,7 +216,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void untag_tagThatIsNotThere_throws() {
+    public void untag_tagThatIsNotThere_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").untag("1 fun"));
     }
 
@@ -216,7 +253,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void find_hashAlone_throws() {
+    public void find_hashAlone_throws() throws KenbotException {
         assertThrows(KenbotException.class, () -> listOf("a").find("#"));
     }
 }

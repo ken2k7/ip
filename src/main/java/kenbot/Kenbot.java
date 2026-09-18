@@ -268,8 +268,9 @@ public class Kenbot {
      *
      * @param task the task that was just created
      * @return the confirmation to show the user
+     * @throws KenbotException if the same task is already in the list
      */
-    private String addTask(Task task) {
+    private String addTask(Task task) throws KenbotException {
         tasks.add(task);
         return "Got it, that's on the list:\n  " + task + "\n" + describeCount();
     }

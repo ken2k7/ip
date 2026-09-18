@@ -100,6 +100,26 @@ public class Task {
     }
 
     /**
+     * Returns whether this is the same task as another.
+     *
+     * <p>Compared on the kind of task, its description and its dates. Whether it
+     * is done is left out, because ticking something off does not make it a
+     * different task, and so are the tags, because labelling one copy would
+     * otherwise let an identical second copy in.</p>
+     *
+     * <p>Case matters: "read book" and "Read book" are treated as different, so
+     * a deliberate second task is never silently refused.</p>
+     *
+     * @param other the task to compare with
+     * @return true if the two describe the same thing
+     */
+    public boolean isSameTask(Task other) {
+        return getTypeCode().equals(other.getTypeCode())
+                && description.equals(other.description)
+                && getStorableDetails().equals(other.getStorableDetails());
+    }
+
+    /**
      * Returns the letter this kind of task is saved under.
      *
      * @return the save-file type code, which each kind of task overrides

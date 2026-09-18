@@ -1339,6 +1339,162 @@ Behaviour that this plan cannot check, or does not check yet:
 Loading is otherwise in place: a run that finds no save file starts with an
 empty list, which is what every test case in this plan relies on.
 
+## TC41 - Reject an event that ends before it starts
+
+**Aim:** Two dates can be given the wrong way round. Stored that way the task
+would read back as ending before it began, and no later command could make
+sense of it, so it is refused at the point it is typed.
+
+**Input:**
+
+```text
+event backwards /from 2019-10-20 /to 2019-10-15
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+An event can't end before it starts. You gave Oct 20 2019 to Oct 15 2019.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC42 - Reject an event whose end time is earlier on the same day
+
+**Aim:** When both ends fall on the same day the date cannot decide the order,
+so the times are compared instead.
+
+**Input:**
+
+```text
+event backwards /from 2019-10-15 1600 /to 2019-10-15 1400
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+An event can't end before it starts. You gave Oct 15 2019 1600 to Oct 15 2019 1400.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC43 - Allow a whole-day event
+
+**Aim:** The other side of TC42. Same day and no times given is not an error: it
+is an event that lasts the day, and refusing it would be worse than allowing it.
+
+**Input:**
+
+```text
+event conference /from 2019-10-15 /to 2019-10-15
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it, that's on the list:
+  [E][ ] conference (from: Oct 15 2019 to: Oct 15 2019)
+That makes 1 task.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC44 - Reject a repeated /by
+
+**Aim:** A second `/by` used to be absorbed into the time of day, producing a
+deadline that read back as nonsense. Giving a marker twice is now refused.
+
+**Input:**
+
+```text
+deadline submit /by 2019-10-15 /by 2019-10-20
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+You've given /by more than once. I only know what to do with one.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC45 - Reject an exact duplicate task
+
+**Aim:** Adding the same thing twice is almost always a double keypress, and two
+identical lines cannot be told apart afterwards when marking or deleting one.
+
+**Input:**
+
+```text
+todo read book
+todo read book
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it, that's on the list:
+  [T][ ] read book
+That makes 1 task.
+____________________________________________________________
+____________________________________________________________
+That's already on the list:
+  [T][ ] read book
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
+## TC46 - Allow a task that differs only in case
+
+**Aim:** The other side of TC45. Case is treated as meaningful so that a second
+task the user actually wanted is never silently refused.
+
+**Input:**
+
+```text
+todo read book
+todo Read book
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Got it, that's on the list:
+  [T][ ] read book
+That makes 1 task.
+____________________________________________________________
+____________________________________________________________
+Got it, that's on the list:
+  [T][ ] Read book
+That makes 2 tasks.
+____________________________________________________________
+____________________________________________________________
+Peace! See you soon!
+____________________________________________________________
+```
+
 ## Deliberately not treated as errors
 
 These were considered and left alone, so that a future reader does not add a
@@ -1352,6 +1508,15 @@ test case for behaviour that was chosen on purpose:
 * **A blank line.** It is ignored and the program carries on waiting.
 * **Marking a task that is already done.** Harmless, so it is allowed rather
   than reported.
+* **A whole-day event**, such as `event x /from 2019-10-15 /to 2019-10-15`.
+  Same day with no times given cannot be ordered, and a day-long event is a
+  real thing, so it is allowed. See TC43.
+* **A second task differing only in case**, such as `todo read book` followed by
+  `todo Read book`. Exact duplicates are refused, but case is treated as
+  meaningful so a deliberate second task is never lost. See TC46.
+* **Times that cannot be compared**, such as `/from 2019-10-15 morning /to
+  2019-10-15 evening`. The time of day is kept as the user typed it, so these
+  cannot be ordered; the event is allowed rather than refused on a guess.
 * **Searching for a tag in a different case**, such as `find #FUN` matching
   `#fun`. Two tags differing only in case are genuinely different tags, but
   searching ignores case so that `find` behaves the same way whether the
