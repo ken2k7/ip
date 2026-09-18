@@ -21,6 +21,13 @@ public class Main extends Application {
     private Kenbot kenbot = new Kenbot("data/Kenbot.txt");
 
     /**
+     * Creates the application. JavaFX calls this itself before
+     * {@link #start(Stage)}, which is why it takes no arguments.
+     */
+    public Main() {
+    }
+
+    /**
      * Builds and shows the chat window from its FXML description.
      *
      * @param stage the window JavaFX created for this application

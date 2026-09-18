@@ -12,6 +12,13 @@ import javafx.application.Application;
 public class Launcher {
 
     /**
+     * Creates the launcher. JavaFX requires a public no-argument
+     * constructor, so it is written out rather than left implicit.
+     */
+    public Launcher() {
+    }
+
+    /**
      * Starts the JavaFX application.
      *
      * @param args command line arguments, passed through to JavaFX

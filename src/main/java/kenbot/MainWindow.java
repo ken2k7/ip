@@ -36,6 +36,13 @@ public class MainWindow extends AnchorPane {
     private Image kenbotImage = new Image(this.getClass().getResourceAsStream("/images/DaKenbot.png"));
 
     /**
+     * Creates the controller. FXMLLoader calls this while building the
+     * window, before any {@code @FXML} field has been filled in.
+     */
+    public MainWindow() {
+    }
+
+    /**
      * Finishes setting up the window once the controls exist.
      *
      * <p>This runs after the loader has filled in the fields above, so it is
