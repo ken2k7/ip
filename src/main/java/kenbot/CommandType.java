@@ -1,6 +1,7 @@
 package kenbot;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * The commands Kenbot understands.
@@ -58,7 +59,7 @@ public enum CommandType {
         // exception is built only when nothing matched, and it is allowed to be
         // a checked one.
         return Arrays.stream(values())
-                .filter(command -> command.name().toLowerCase().equals(word))
+                .filter(command -> command.name().toLowerCase(Locale.ROOT).equals(word))
                 .findFirst()
                 .orElseThrow(() -> new KenbotException("Don't know that one."));
     }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import kenbot.KenbotException;
 
@@ -22,7 +23,7 @@ public class TaskDate {
 
     /** How a date is shown on screen, for example {@code Oct 15 2019}. */
     private static final DateTimeFormatter DISPLAY_FORMAT =
-            DateTimeFormatter.ofPattern("MMM dd yyyy");
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ROOT);
 
     private final LocalDate date;
 
@@ -116,7 +117,7 @@ public class TaskDate {
         }
         for (String pattern : new String[] {"HHmm", "HH:mm", "H:mm"}) {
             try {
-                return LocalTime.parse(time, DateTimeFormatter.ofPattern(pattern));
+                return LocalTime.parse(time, DateTimeFormatter.ofPattern(pattern, Locale.ROOT));
             } catch (DateTimeParseException e) {
                 // Try the next shape; a time nobody can read is not an error
                 // here, it just means the two cannot be ordered.

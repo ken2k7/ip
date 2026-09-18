@@ -2,6 +2,7 @@ package kenbot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.BiPredicate;
 
 import kenbot.task.Tag;
@@ -150,7 +151,7 @@ public class TaskList {
             throw new KenbotException("What am I looking for? Like: find book");
         }
 
-        String wanted = keyword.trim().toLowerCase();
+        String wanted = keyword.trim().toLowerCase(Locale.ROOT);
 
         // A keyword starting with # asks about tags rather than descriptions,
         // matching how a tag is written when a task is created.
@@ -164,7 +165,7 @@ public class TaskList {
         // and no counter kept by hand.
         List<Task> matches = tasks.stream()
                 .filter(task -> searchesTags ? hasMatchingTag(task, needle)
-                        : task.getDescription().toLowerCase().contains(needle))
+                        : task.getDescription().toLowerCase(Locale.ROOT).contains(needle))
                 .toList();
 
         if (matches.isEmpty()) {
@@ -187,7 +188,7 @@ public class TaskList {
      */
     private static boolean hasMatchingTag(Task task, String wanted) {
         return task.getTags().stream()
-                .anyMatch(tag -> tag.getName().toLowerCase().contains(wanted));
+                .anyMatch(tag -> tag.getName().toLowerCase(Locale.ROOT).contains(wanted));
     }
 
     /**
