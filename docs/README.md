@@ -53,6 +53,8 @@ them freely and your tasks follow you.
 
 ## Commands at a glance
 
+Each example below shows what Kenbot says back.
+
 | Command | What it does |
 | --- | --- |
 | `todo DESCRIPTION` | adds a task with no date |
@@ -86,13 +88,6 @@ Kenbot shows them back in a friendlier form — `Oct 15 2019` and
 Anything that is not a real date is refused, so `Sunday` and `15-10-2019` will
 both be rejected with a reminder of the accepted format.
 
-## About the examples below
-
-The replies below are shown as the terminal prints them, between two lines of
-underscores. In the window you see exactly the same wording inside a message
-from Kenbot; the underscore lines are the terminal's way of separating one reply
-from the next, and are not part of the answer.
-
 ## Adding a to-do
 
 A task with nothing but a description.
@@ -100,11 +95,9 @@ A task with nothing but a description.
 Example: `todo read book`
 
 ```
-____________________________________________________________
 Got it, that's on the list:
   [T][ ] read book
 That makes 1 task.
-____________________________________________________________
 ```
 
 ## Adding a deadline
@@ -114,11 +107,9 @@ A task that has to be finished by a particular date.
 Example: `deadline return book /by 2019-10-15`
 
 ```
-____________________________________________________________
 Got it, that's on the list:
   [D][ ] return book (by: Oct 15 2019)
 That makes 2 tasks.
-____________________________________________________________
 ```
 
 ## Adding an event
@@ -128,11 +119,9 @@ A task that runs from one date to another. Times are optional on either end.
 Example: `event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600`
 
 ```
-____________________________________________________________
 Got it, that's on the list:
   [E][ ] project meeting (from: Oct 15 2019 1400 to: Oct 15 2019 1600)
 That makes 3 tasks.
-____________________________________________________________
 ```
 
 ## Listing your tasks
@@ -140,12 +129,10 @@ ____________________________________________________________
 Example: `list`
 
 ```
-____________________________________________________________
 Here's what you've got:
 1.[T][ ] read book
 2.[D][ ] return book (by: Oct 15 2019)
 3.[E][ ] project meeting (from: Oct 15 2019 1400 to: Oct 15 2019 1600)
-____________________________________________________________
 ```
 
 The letter in the first brackets is the kind of task — `T` for to-do, `D` for
@@ -154,9 +141,7 @@ deadline, `E` for event. The second brackets hold an `X` once the task is done.
 An empty list says so rather than showing nothing:
 
 ```
-____________________________________________________________
 Nothing on the list yet.
-____________________________________________________________
 ```
 
 ## Marking a task done, or not done
@@ -166,19 +151,15 @@ Use the number shown by `list`.
 Example: `mark 1`
 
 ```
-____________________________________________________________
 Nice, that's done:
   [T][X] read book
-____________________________________________________________
 ```
 
 Example: `unmark 1`
 
 ```
-____________________________________________________________
 Alright, back on the list:
   [T][ ] read book
-____________________________________________________________
 ```
 
 ## Deleting a task
@@ -186,11 +167,9 @@ ____________________________________________________________
 Example: `delete 2`
 
 ```
-____________________________________________________________
 Gone:
   [D][ ] return book (by: Oct 15 2019)
 That makes 2 tasks.
-____________________________________________________________
 ```
 
 The remaining tasks are renumbered straight away, so `list` always runs from 1
@@ -206,11 +185,9 @@ The quickest way is to put them at the end when you create the task:
 Example: `todo read book #fun #cs2103`
 
 ```
-____________________________________________________________
 Got it, that's on the list:
   [T][ ] read book #fun #cs2103
 That makes 1 task.
-____________________________________________________________
 ```
 
 This works for deadlines and events too — put the tags after the dates:
@@ -226,10 +203,8 @@ optional here, and you can give several at once:
 Example: `tag 1 fun cs2103`
 
 ```
-____________________________________________________________
 Tagged:
   [T][ ] read book #fun #cs2103
-____________________________________________________________
 ```
 
 `untag` takes them back off again:
@@ -237,10 +212,8 @@ ____________________________________________________________
 Example: `untag 1 fun`
 
 ```
-____________________________________________________________
 Untagged:
   [T][ ] read book #cs2103
-____________________________________________________________
 ```
 
 A tag is one word with no spaces, and cannot contain `|`. Capitals count:
@@ -258,19 +231,15 @@ will not find a task tagged `#fun` — you need `find #fun`.
 Example: `find book`
 
 ```
-____________________________________________________________
 Found these:
 1.[T][X] read book
 2.[D][ ] return book (by: Oct 15 2019)
-____________________________________________________________
 ```
 
 If nothing matches, Kenbot says so:
 
 ```
-____________________________________________________________
 Nothing matches 'xyz'.
-____________________________________________________________
 ```
 
 ## Leaving
@@ -278,9 +247,7 @@ ____________________________________________________________
 Example: `bye`
 
 ```
-____________________________________________________________
 Peace! See you soon!
-____________________________________________________________
 ```
 
 In a terminal this ends the program. In the window it is only a goodbye — close
